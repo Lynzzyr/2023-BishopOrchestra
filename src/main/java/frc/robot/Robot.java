@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.SetCoastMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,6 +32,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // Set coast mode after 5 seconds disabled
+    new Trigger(this::isEnabled)
+      .negate()
+      .debounce(5)
+      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain));
   }
 
   /**
@@ -56,6 +66,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    // Set brake mode
+    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -70,6 +84,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    // Set brake mode
+    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -85,6 +103,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+
+    // Set brake mode
+    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }

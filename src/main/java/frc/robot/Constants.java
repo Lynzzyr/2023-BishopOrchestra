@@ -13,7 +13,43 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+
+    public static final class kOperator {
+        public static final int port_joystickMain               = 0;
+        public static final int port_joystickSecondary          = 1;
+    }
+
+    public static final class kDrivetrain {
+
+        public static final class kMotor {
+            public static final int id_leftFrontDrive           = 20;
+            public static final int id_leftCentreDrive          = 21;
+            public static final int id_leftRearDrive            = 22;
+
+            public static final int id_rightFrontDrive          = 23;
+            public static final int id_rightCentreDrive         = 24;
+            public static final int id_rightRearDrive           = 25;
+
+            public static final double rampRate                 = 0.3; // seconds
+
+            public static final int currentLimit                = 80;
+        }
+
+        public static final class kCANCoder {
+            public static final int id_leftEncoder              = 30;
+            public static final int id_rightEncoder             = 29;
+            public final static double enc_CountsPerRevolution  = 4096;
+            public final static double enc_SensorCoefficient    = (Math.PI * kDrivetrain.kWheel.wheelDiameter) / enc_CountsPerRevolution;
+            public final static String enc_UnitString           = "m";
+        }
+
+        public static class kWheel {
+            public final static double wheelDiameter            = 0.09404; // metres, placeholder value
+            public final static double wheelCircumference       = Math.PI * wheelDiameter; // metres
+        }
+    }
+
+    public static final class kGyro {
+        public static final int id_gyro                         = 10;
+    }
 }
