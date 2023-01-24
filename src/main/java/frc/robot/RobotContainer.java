@@ -9,6 +9,13 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,10 +42,13 @@ public class RobotContainer {
     // Commands
     private final DefaultDrive cmd_defaultDrive;
 
+    // Trajectory
+    private Trajectory trajectory = new Trajectory();
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer() {
+    public RobotContainer(Path trajectoryPath) {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
@@ -53,6 +63,15 @@ public class RobotContainer {
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
+
+        // Trajectory path
+        try {
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException io) {
+            DriverStation.reportError("Unable to load trajectory.", io.getStackTrace());
+        }
+
+        
 
         // Configure the trigger bindings
         configureBindings();

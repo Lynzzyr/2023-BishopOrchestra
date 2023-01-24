@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import java.nio.file.Path;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kTrajectoryJSONPath;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -29,9 +33,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    // Load trajectory paths
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryJSONPath.trajectoryJSON);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(trajectoryPath);
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
