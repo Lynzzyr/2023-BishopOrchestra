@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.kOperator;
-import frc.robot.commands.Autos;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.auto.AutoPathPlanning;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -41,14 +41,15 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final AutoPathPlanning cmd_autoPath;
 
     // Trajectory
-    private Trajectory trajectory = new Trajectory();
+    private Trajectory m_trajectory;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(Path trajectoryPath) {
+    public RobotContainer(Trajectory trajectory) {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
@@ -60,18 +61,13 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_autoPath = new AutoPathPlanning(sys_drivetrain, trajectory);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Trajectory path
-        try {
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        } catch (IOException io) {
-            DriverStation.reportError("Unable to load trajectory.", io.getStackTrace());
-        }
-
-        
+        m_trajectory = trajectory;
 
         // Configure the trigger bindings
         configureBindings();
@@ -102,6 +98,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return Autos.exampleAuto(sys_exampleSubsystem);
+        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+        return cmd_autoPath.andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0));
     }
 }

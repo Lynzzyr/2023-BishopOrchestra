@@ -52,20 +52,17 @@ public final class Constants {
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0;
-        public static final double kvVolts                      = 0;
-        public static final double kaVolts                      = 0;
+        public static final double ksVolts                      = 0.58181;
+        public static final double kvVolts                      = 8.5755;
+        public static final double kaVolts                      = 0.56494;
 
-        public static final double kPDriveVel                   = 0;
+        public static final double kPDriveVel                   = 0.11153;
 
-        public static final double kTrackWidth                  = 0;
+        public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
             = new DifferentialDriveKinematics(kTrackWidth);
 
         public static class kAuto {
-            public static final double kMaxVelocity             = 0;
-            public static final double kMaxAcceleration         = 0;
-
             public static final double kMaxVolts                = 10;
 
             // Default baseline values
@@ -83,6 +80,6 @@ public final class Constants {
     }
 
     public static final class kTrajectoryJSONPath {
-        public static final String trajectoryJSON = "paths/trajectory.wpilib.json";
+        public static final String trajectoryJSON = "output/Path1.wpilib.json";
     }
 }
