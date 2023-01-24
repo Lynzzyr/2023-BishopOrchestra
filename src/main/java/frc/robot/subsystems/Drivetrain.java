@@ -306,10 +306,12 @@ public class Drivetrain extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
     }
 
-    public void resetOdometry() {
+    public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance(), getPose2d());
+        m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance(), pose);
     }
+
+    // ----------
 
     @Override
     public void periodic() {
