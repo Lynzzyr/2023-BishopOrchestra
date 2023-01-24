@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -32,7 +34,7 @@ public final class Constants {
 
             public static final double rampRate                 = 0.3; // seconds
 
-            public static final int currentLimit                = 80;
+            public static final int currentLimit                = 40;
         }
 
         public static final class kCANCoder {
@@ -51,5 +53,8 @@ public final class Constants {
 
     public static final class kGyro {
         public static final int id_gyro                         = 10;
+
+        public static final AxisDirection mountPoseForward      = AxisDirection.NegativeY;
+        public static final AxisDirection mountPoseUp           = AxisDirection.PositiveZ;
     }
 }
