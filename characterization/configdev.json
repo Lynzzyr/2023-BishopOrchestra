@@ -1,11 +1,18 @@
 {
-  "counts per rotation": 4096.0,
+  "canivore names": [
+    "rio",
+    "rio",
+    ""
+  ],
+  "counts per rotation": 1024.0,
+  "encoder canivore name": "rio",
   "encoder type": "CANCoder",
   "encoding": false,
   "gearing denominator": 1.0,
   "gearing numerator": 1.0,
   "gyro": "Pigeon2",
-  "gyro ctor": "10",
+  "gyro canivore name": "rio",
+  "gyro ctor": "10, rio\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000",
   "is drivetrain": true,
   "motor controllers": [
     "TalonFX",

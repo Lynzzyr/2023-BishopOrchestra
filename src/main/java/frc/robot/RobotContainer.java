@@ -98,7 +98,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+        sys_drivetrain.resetOdometry(cmd_autoPath.getTrajectory().getInitialPose());
         return cmd_autoPath.andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0));
     }
 }
