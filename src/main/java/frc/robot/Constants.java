@@ -52,11 +52,11 @@ public final class Constants {
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0.58181;
-        public static final double kvVolts                      = 8.5755;
-        public static final double kaVolts                      = 0.56494;
+        public static final double ksVolts                      = 0.08122;
+        public static final double kvVolts                      = 2.796;
+        public static final double kaVolts                      = 0.28485;
 
-        public static final double kPDriveVel                   = 0.11153;
+        public static final double kPDriveVel                   = 3.3466;
 
         public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
@@ -64,6 +64,9 @@ public final class Constants {
 
         public static class kAuto {
             public static final double kMaxVolts                = 10;
+
+            public static final double kMaxSpeed                = 1;
+            public static final double kMaxAcceleration         = 1;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
