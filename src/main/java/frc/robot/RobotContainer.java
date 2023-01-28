@@ -11,6 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,7 +37,6 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final AutoPathPlanning cmd_autoPath;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -59,7 +59,6 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_autoPath = new AutoPathPlanning(sys_drivetrain, m_trajectory);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -96,6 +95,6 @@ public class RobotContainer {
 
         sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
 
-        return cmd_autoPath.andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0));
+        return new AutoPathPlanning(sys_drivetrain, m_trajectory).andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0));
     }
 }
