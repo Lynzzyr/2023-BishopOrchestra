@@ -55,6 +55,8 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_gyroYaw;
     private final GenericEntry nt_gyroPitch;
     private final GenericEntry nt_gyroRoll;
+    private final GenericEntry nt_poseMetersX;
+    private final GenericEntry nt_poseMetersY;
 
 
     public Drivetrain() {
@@ -90,6 +92,8 @@ public class Drivetrain extends SubsystemBase {
         enc_leftDrive.configAllSettings(enc_config);
         enc_rightDrive.configAllSettings(enc_config);
 
+        resetEncoders();
+
         // Gyro and odometry
         m_gyro = new WPI_Pigeon2(kGyro.id_gyro);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
@@ -107,6 +111,8 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
         nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
         nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
+        nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
+        nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
     }
 
     /**
@@ -157,7 +163,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        rampRate(kDrivetrain.kMotor.rampRate);
+        // rampRate(kDrivetrain.kMotor.rampRate);
     }
 
     /**
@@ -306,9 +312,17 @@ public class Drivetrain extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
     }
 
+    /**
+     * Reset the odometry to a specified pose.
+     * 
+     * The reset position command has 0, 0 (distance) hard-coded in to
+     * avoid any encoder timing lag from resetting encoders.
+     * 
+     * @param pose
+     */
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance(), pose);
+        m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
     }
 
     // ----------
@@ -316,7 +330,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // Update odometry
-        m_odometry.update(m_gyro.getRotation2d(), enc_leftDrive.getPosition(), enc_rightDrive.getPosition());
+        m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // Push data to Shuffleboard
         nt_leftVelocity.setDouble(getLeftVelocity());
@@ -328,6 +342,8 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroYaw.setDouble(getYaw());
         nt_gyroPitch.setDouble(getPitch());
         nt_gyroRoll.setDouble(getRoll());
+        nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
+        nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
     }
 
     @Override
