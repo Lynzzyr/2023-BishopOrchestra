@@ -43,8 +43,8 @@ public class Robot extends TimedRobot {
 
     // Load trajectory paths
     try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryJSONPath.trajectoryJSON);
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      Path path = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryJSONPath.trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(path);
     } catch (IOException io) {
       DriverStation.reportError("Unable to load trajectory.", io.getStackTrace());
     }
