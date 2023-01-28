@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
 import frc.robot.Constants.kDrivetrain.kMotor;
@@ -62,13 +62,13 @@ public class Drivetrain extends SubsystemBase {
     public Drivetrain() {
 
         // Instantiate motors and differential drive
-        mot_leftFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftFrontDrive);
-        mot_leftCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftCentreDrive);
-        mot_leftRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftRearDrive);
+        mot_leftFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftFrontDrive, kCANBus.bus_drive);
+        mot_leftCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftCentreDrive, kCANBus.bus_drive);
+        mot_leftRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftRearDrive, kCANBus.bus_drive);
 
-        mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive);
-        mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive);
-        mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive);
+        mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive, kCANBus.bus_drive);
+        mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive, kCANBus.bus_drive);
+        mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive, kCANBus.bus_drive);
 
         // Current limiting
         m_currentLimit = new SupplyCurrentLimitConfiguration();
@@ -82,8 +82,8 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive = new DifferentialDrive(mot_leftFrontDrive, mot_rightFrontDrive);
 
         // Instantiate CANCoders
-        enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder);
-        enc_rightDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_rightEncoder);
+        enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder, kCANBus.bus_drive);
+        enc_rightDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_rightEncoder, kCANBus.bus_drive);
 
         enc_config = new CANCoderConfiguration();
         enc_config.sensorCoefficient = kDrivetrain.kCANCoder.enc_SensorCoefficient;
@@ -95,7 +95,7 @@ public class Drivetrain extends SubsystemBase {
         resetEncoders();
 
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());

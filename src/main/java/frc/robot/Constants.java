@@ -23,6 +23,11 @@ public final class Constants {
         public static final int port_joystickSecondary          = 1;
     }
 
+    public static final class kCANBus {
+        public static final String bus_rio                      = "rio";
+        public static final String bus_drive                    = "drive";
+    }
+
     public static final class kDrivetrain {
 
         public static final class kMotor {
@@ -83,6 +88,6 @@ public final class Constants {
     }
 
     public static final class kTrajectoryJSONPath {
-        public static final String trajectoryJSON = "output/Path1.wpilib.json";
+        public static final String trajectoryJSON = "pathplanner/generatedJSON/Path1.wpilib.json";
     }
 }
