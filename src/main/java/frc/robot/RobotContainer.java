@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.AutoPathPlanning;
@@ -93,8 +94,14 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
+        // Disable ramp rate
+        sys_drivetrain.rampRate(0);
+        // Reset odometry
         sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
-
-        return new AutoPathPlanning(sys_drivetrain, m_trajectory).andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0));
+        // Run auto path, then stop and re-set ramp rate
+        return new AutoPathPlanning(sys_drivetrain, m_trajectory)
+            .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
     }
 }
+
