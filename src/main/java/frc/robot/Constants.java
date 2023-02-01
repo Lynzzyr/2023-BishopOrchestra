@@ -101,8 +101,8 @@ public final class Constants {
         public static final double kD                           = 0;
     }
 
-    public static final class kTurnDegrees {
-        public static final double maxAngle                     = 360;
+    public static final class kTurn90DegreesChargeStation {
+        public static final double maxAngle                     = 90;
         public static final double angleTolerance               = 1.5;
 
         public static final double kP_chargeStation             = 0.0125;
