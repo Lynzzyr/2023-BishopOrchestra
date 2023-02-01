@@ -7,12 +7,11 @@ package frc.robot;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.auto.AutoPathPlanning;
+import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -83,7 +82,6 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        
     }
 
     /**
@@ -99,7 +97,7 @@ public class RobotContainer {
         // Reset odometry
         sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new AutoPathPlanning(sys_drivetrain, m_trajectory)
+        return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
     }

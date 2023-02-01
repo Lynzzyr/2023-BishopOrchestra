@@ -100,6 +100,8 @@ public class Drivetrain extends SubsystemBase {
 
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
+        resetGyro();
+
         // Shuffleboard
         sb_drivetrainTab = Shuffleboard.getTab("Drivetrain");
         nt_leftVelocity = sb_drivetrainTab.add("Left velocity", getLeftVelocity()).getEntry();
@@ -163,7 +165,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        // rampRate(kDrivetrain.kMotor.rampRate);
+        rampRate(kDrivetrain.kMotor.rampRate);
     }
 
     /**

@@ -90,4 +90,23 @@ public final class Constants {
     public static final class kTrajectoryJSONPath {
         public static final String trajectoryJSON = "pathplanner/generatedJSON/Path1.wpilib.json";
     }
+
+    public static final class kBalancing {
+        public static final double targetPitch                  = 0;
+        public static final double maxAngle                     = 33.25;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP                           = 0.04;
+        public static final double kI                           = 0;
+        public static final double kD                           = 0;
+    }
+
+    public static final class kTurnDegrees {
+        public static final double maxAngle                     = 360;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP_chargeStation             = 0.0125;
+        public static final double kI_chargeStation             = 0;
+        public static final double kD_chargeStation             = 0;
+    }
 }
