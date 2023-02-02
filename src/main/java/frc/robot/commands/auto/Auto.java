@@ -11,8 +11,8 @@ public class Auto extends SequentialCommandGroup {
     public Auto(Drivetrain sys_drivetrain, PathPlannerTrajectory trajectory) {
         super(
             new AutoPathPlanning(sys_drivetrain, trajectory),
-            new BalancingChargeStation(sys_drivetrain),
-            new Turn90DegreesChargeStation(sys_drivetrain, TurnDirection.LEFT)
+            new BalancingChargeStation(sys_drivetrain)
+            // new Turn90DegreesChargeStation(sys_drivetrain, TurnDirection.LEFT)
         );
     }
 

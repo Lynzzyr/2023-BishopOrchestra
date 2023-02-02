@@ -56,7 +56,7 @@ public class BalancingChargeStation extends PIDCommand {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return getController().atSetpoint();
+        return getController().atSetpoint() && Math.abs(m_drivetrain.getLeftVelocity()) < 0.01;
     }
 
 }
