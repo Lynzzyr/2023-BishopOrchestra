@@ -11,7 +11,8 @@ import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
-import edu.wpi.first.math.trajectory.Trajectory;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -39,12 +40,12 @@ public class RobotContainer {
     private final DefaultDrive cmd_defaultDrive;
 
     // Trajectory
-    private Trajectory m_trajectory;
+    private PathPlannerTrajectory m_trajectory;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(Trajectory trajectory) {
+    public RobotContainer(PathPlannerTrajectory trajectory) {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);

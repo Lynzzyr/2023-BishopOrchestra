@@ -4,20 +4,18 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.kTrajectoryJSONPath;
+import frc.robot.Constants.kTrajectoryPath;
+import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -32,7 +30,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   // Path following trajectory
-  private Trajectory trajectory = new Trajectory();
+  private PathPlannerTrajectory trajectory;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,12 +40,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Load trajectory paths
-    try {
-      Path path = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryJSONPath.trajectoryJSON);
-      trajectory = TrajectoryUtil.fromPathweaverJson(path);
-    } catch (IOException io) {
-      DriverStation.reportError("Unable to load trajectory.", io.getStackTrace());
-    }
+    trajectory = PathPlanner.loadPath(kTrajectoryPath.path1, new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration));
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

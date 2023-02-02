@@ -70,8 +70,8 @@ public final class Constants {
         public static class kAuto {
             public static final double kMaxVolts                = 10;
 
-            public static final double kMaxSpeed                = 1;
-            public static final double kMaxAcceleration         = 1;
+            public static final double kMaxSpeed                = 3;
+            public static final double kMaxAcceleration         = 3;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
@@ -87,8 +87,8 @@ public final class Constants {
         public static final AxisDirection mountPoseUp           = AxisDirection.PositiveZ;
     }
 
-    public static final class kTrajectoryJSONPath {
-        public static final String trajectoryJSON = "pathplanner/generatedJSON/Path1.wpilib.json";
+    public static final class kTrajectoryPath {
+        public static final String path1 = "Path1";
     }
 
     public static final class kBalancing {
