@@ -13,9 +13,11 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kDrivetrain.kAuto;
+import frc.robot.commands.ArmRotation;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -100,6 +102,7 @@ public class Robot extends TimedRobot {
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+    //Commands.runOnce((() -> new ArmRotation(m_robotContainer.sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kdrivingpos))).schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
