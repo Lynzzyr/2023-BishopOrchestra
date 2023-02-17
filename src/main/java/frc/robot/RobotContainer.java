@@ -5,6 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.kOperator;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.Claw;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.DefaultDrive;
@@ -36,6 +42,8 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
+    public final Claw sys_claw;
+    public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
@@ -62,6 +70,8 @@ public class RobotContainer {
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
+        sys_claw = new Claw();
+        sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
@@ -94,30 +104,23 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-        joystickMain.leftBumper()
-            .onTrue(cmd_lowSpeed);
+        // joystickMain.x()
+        //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
+        //     .onFalse(new CloseClaw(sys_claw));
+        joystickMain.x()
+        .onTrue(new OpenClaw(sys_claw))
+        .onFalse(new CloseClaw(sys_claw));
+        
+
+        joystickMain.y()
+            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
 
         joystickMain.leftBumper()
+            .onTrue(cmd_lowSpeed)
             .onFalse(cmd_midSpeed);
 
         joystickMain.rightBumper()
-            .onTrue(cmd_highSpeed);
-
-        joystickMain.rightBumper()
-            .onFalse(cmd_midSpeed);
-        
-
-        joystickSecondary.leftBumper()
-            .onTrue(cmd_lowSpeed);
-        
-        joystickSecondary.leftBumper()
-            .onFalse(cmd_midSpeed);
-
-
-        joystickSecondary.rightBumper()
-            .onTrue(cmd_highSpeed);
-
-        joystickSecondary.rightBumper()
+            .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
         // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
