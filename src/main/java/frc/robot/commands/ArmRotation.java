@@ -18,7 +18,6 @@ public class ArmRotation extends CommandBase {
     this.setpoint = setpoint;
 
     addRequirements(sys_arm);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +25,6 @@ public class ArmRotation extends CommandBase {
   public void initialize() {
     sys_arm.setSetpoint(setpoint);
     sys_arm.enable();
-   // sys_arm.useOutput(speed, setpoint);
   
   }
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +35,6 @@ public class ArmRotation extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     sys_arm.disable();
-    //System.out.println("ArmRotation");
   }
 
   // Returns true when the command should end.

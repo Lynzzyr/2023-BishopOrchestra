@@ -226,13 +226,8 @@ public final class Constants {
         }
 
         public static class kSetpoints{
-            public final static double kfront = 0.5; //0.43
-            public final static double kback = 0.0; //0.56
-            public final static double keight = 0.5;
-            public final static double kzero = 0;
-            // public final static double kplacehigh = 0.39;
-            // public final static double kplacelow = 0.43;
-            // public final static double kIdlepos = -0.02;
+            public final static double kfront = 0.5; 
+            public final static double kback = 0.0; 
 
         }
     

@@ -22,7 +22,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
   private final GenericEntry absolutePosition, angle;
-  // fix the genericentry import it
+
 
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
@@ -50,7 +50,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
     angle = sb_armTab.add("Angle",0).getEntry();
-   // rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
@@ -67,14 +66,13 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     else{
       m_motor1.setVoltage(voltage- calculateFF());
     }
-    // System.out.println(voltage);
   }
 
   @Override
   public double getMeasurement() { // gets absolute position and returns the value 
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
-     if (ecd_value > 0.8){  // used to fix the weird values from encoder
+     if (ecd_value > 0.8){  // used to fix encoder values
         absolutePosition.setDouble(ecd_value - 1 + Constants.kArmSubsystem.knintydegreepos);
       return ecd_value -1 + Constants.kArmSubsystem.knintydegreepos;
     }else{
@@ -104,11 +102,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     return getMeasurement()*360;
   }
 
-  // public double getRawEcd(){
-  //   double rawEcd_value = m_encoder.getAbsolutePosition();
-  //   return rawEcd_value;
-  // }
-
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
@@ -119,5 +112,3 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   }
   
 }
-
-//TO DO make it print the raw encoder setpoint, make sure the code is the same as the driveteam code, delete useless constants, pull new code from main and fix stuff 
