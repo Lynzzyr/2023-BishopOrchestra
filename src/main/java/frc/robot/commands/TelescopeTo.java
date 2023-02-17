@@ -8,9 +8,6 @@ public class TelescopeTo extends CommandBase {
     private final Telescope sys_telescope;
     private final double setPoint;
 
-    private boolean topSwitch;
-    private boolean lowSwitch;
-
     public TelescopeTo(Telescope telescope, double destination) {
         sys_telescope = telescope;
         setPoint = destination;
@@ -23,14 +20,6 @@ public class TelescopeTo extends CommandBase {
     @Override
     public void initialize() {
         sys_telescope.extend(setPoint);
-
-        if (sys_telescope.rotationDirection() > 0.5) {
-            topSwitch = true;
-            lowSwitch = false;
-        } else {
-            topSwitch = false;
-            lowSwitch = true;
-        }
 
     }
 
@@ -49,10 +38,8 @@ public class TelescopeTo extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (topSwitch) {
-            return sys_telescope.getMaxLimSwitch() ? true : false;
-        } else if (lowSwitch) {
-            return sys_telescope.getMinLimSwitch() ? true : false;
+        if (sys_telescope.getSwitch().getActiveLimitSwitch()) {
+            return true;
         }
         
         //else if (Math.abs(setPoint - sys_telescope.getDistance()) <= 1) {
