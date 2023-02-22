@@ -4,27 +4,44 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
+import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
+import frc.robot.commands.Intake.IntakeHandoffSequence;
+import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.PivotMove;
+import frc.robot.commands.Intake.PivotZeroEncoder;
+import frc.robot.commands.Intake.RollerMove;
+import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
+import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.commands.GearShift;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Intake.IntakeRoller;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.math.trajectory.Trajectory;
 import frc.robot.subsystems.Telescope;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,7 +52,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer
+{
 
     // Driver controllers
     private final CommandXboxController joystickMain;
@@ -43,19 +61,28 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
+    private final IntakePivot sys_intakePivot;
+    private final IntakeWrist sys_intakeWrist;
+    private final IntakeRoller sys_intakeRoller;
+
+    // Commands
+    private final DefaultDrive cmd_defaultDrive;
+    private final PivotZeroEncoder cmd_pivotZero;
+
+    // Sequential commands
+    private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHandoffSequence seq_intakeHandoff;
     public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
-    // Commands
-    private final DefaultDrive cmd_defaultDrive;
-    
+
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
 
-    // Trajectory
+    // // Trajectory
     private PathPlannerTrajectory m_trajectory;
 
     /**
@@ -67,11 +94,19 @@ public class RobotContainer {
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
 
-        // Trajectory paths
+        // // Trajectory paths
         m_trajectory = trajectory;
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
+        sys_intakePivot = new IntakePivot();
+        sys_intakeWrist = new IntakeWrist();
+        sys_intakeRoller = new IntakeRoller();
+
+        // Sequential commands
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        
         sys_claw = new Claw();
         sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
@@ -79,10 +114,10 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
+        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -105,15 +140,29 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
+    /**
+     * y-intake pivot ascend
+     * a-intake pivot descend
+     * x-intake roller roll backwards
+     * b-intake roller roll forwards */
+
+     /*
+      * starting with - 20% of 12 = 2.4
+      */
+
+
     private void configureBindings() {
 
-        // joystickMain.x()
-        //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
-        //     .onFalse(new CloseClaw(sys_claw));
-        joystickMain.x()
-        .onTrue(new OpenClaw(sys_claw))
-        .onFalse(new CloseClaw(sys_claw));
+        joystickMain.a()
+            .whileTrue(seq_intakePickup)
+            .whileFalse(seq_intakeHandoff);
         
+        joystickMain.rightStick()
+            .onTrue(cmd_pivotZero);
+
+        joystickMain.x()
+            .onTrue(new OpenClaw(sys_claw))
+            .onFalse(new CloseClaw(sys_claw));
 
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
@@ -126,19 +175,17 @@ public class RobotContainer {
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
-        joystickSecondary.povUp().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
-        joystickSecondary.povLeft().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
-        joystickSecondary.povDown().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+        joystickSecondary.povUp()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+        joystickSecondary.povLeft()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
+        joystickSecondary.povDown()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
 
-        // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
-        // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
-        // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
-        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
-      //  joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdlepos));
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
-       // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
-       // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
+        joystickSecondary.x()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+        joystickSecondary.b()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
     }
 
     
@@ -158,8 +205,7 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-
-            .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
 
 }

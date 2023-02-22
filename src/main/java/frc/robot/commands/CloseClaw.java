@@ -21,7 +21,6 @@ public class CloseClaw extends CommandBase {
     public void initialize() {
         // m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
         m_claw.clawGoTo(kClaw.closePosition);
-        System.out.println("Close");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
