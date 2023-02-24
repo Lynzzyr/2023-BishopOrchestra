@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -134,6 +135,15 @@ public class Telescope extends SubsystemBase {
 
     public void setPrevPos(double prevPos) {
         this.prevPos = prevPos;
+    }
+
+    /**
+     * Sets the Neutral Mode
+     * @param newMode Brake, Coast
+     */
+
+     public void setNeutralMode(IdleMode newMode) {
+        mot_extender.setIdleMode(newMode);
     }
 
     @Override

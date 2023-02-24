@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.Claw;
@@ -7,39 +8,53 @@ import frc.robot.subsystems.Claw;
 public class CloseClaw extends CommandBase {
 
     private final Claw m_claw;
+    private final boolean isAuto;
 
-    public CloseClaw(Claw claw) {
+    private boolean hasClosed = false;
+
+    public CloseClaw(Claw claw, boolean auto) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
+        isAuto = auto;
 
         addRequirements(m_claw);
-        
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        // m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
-        m_claw.clawGoTo(kClaw.closePosition);
+        hasClosed = false;
+        if (!isAuto) {
+            m_claw.closeClaw();
+        }
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {}
+    public void execute() {
+        if (m_claw.getDistanceFromClaw() <= kClaw.objectRange) {
+            if (!hasClosed) {
+                m_claw.closeClaw();
+                if (m_claw.isStalled()) {
+                    Timer.delay(0.5);
+                    hasClosed = true;
+                }
+            }
+        }
+    }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_claw.stopMot();
-        m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, 0);
     }
 
-    // Returns true when the command should end.
-    @Override
+    @Override 
     public boolean isFinished() {
-        // return Math.abs(m_claw.getEncoderPosition()) >= 17500;
-        // return m_claw.getDistanceFromClaw() <= (kClaw.objectRange + 50) && m_claw.getDistanceFromClaw() != 0;
-        return Math.abs(kClaw.closePosition - m_claw.getEncoderPosition()) <= kClaw.encoderOffset;
+        if (!isAuto) {
+            return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset || m_claw.isStalled();
+        } else {
+            return hasClosed && (Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset || m_claw.isStalled());
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kOperator;
 
@@ -145,6 +146,10 @@ public class RobotContainer
 
     private void configureBindings() {
 
+        joystickMain.x()
+            .onTrue(new CloseClaw(sys_claw, false))
+            .onFalse(new OpenClaw(sys_claw, false));
+        
         joystickMain.a()
             .whileTrue(seq_intakePickup)
             .whileFalse(seq_intakeHandoff);
@@ -152,12 +157,20 @@ public class RobotContainer
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
-        joystickMain.x()
-            .onTrue(new OpenClaw(sys_claw))
-            .onFalse(new CloseClaw(sys_claw));
+        //TODO: FIX zeroing
 
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+
+        joystickMain.povLeft()
+            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(-0.1)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
+
+        joystickMain.povRight()
+            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(0.1)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
+
+
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)

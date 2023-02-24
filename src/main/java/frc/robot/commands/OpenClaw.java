@@ -7,10 +7,12 @@ import frc.robot.subsystems.Claw;
 public class OpenClaw extends CommandBase {
 
     private final Claw m_claw;
+    private final boolean isAuto;
 
-    public OpenClaw(Claw claw) {
+    public OpenClaw(Claw claw, boolean auto) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
+        isAuto = auto;
         
         addRequirements(m_claw);
         
@@ -19,27 +21,30 @@ public class OpenClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.setPIDF(kClaw.kP, 0, 0, 0);
-        m_claw.clawGoTo(kClaw.openPosition);
+        m_claw.openClaw();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_claw.stopMot();
+        if (isAuto) {
+            m_claw.closeClaw();
+        } else {
+            m_claw.stopMot();
+        }
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return 
-        Math.abs(kClaw.openPosition - m_claw.getEncoderPosition()) <= kClaw.encoderOffset
-        && 
-        (m_claw.getDistanceFromClaw() <= kClaw.objectRange && m_claw.getDistanceFromClaw() != 0);
+        // return (!isAuto) &&  || m_claw.getDistanceFromClaw() <= kClaw.objectRange;
+        if (isAuto) {
+            return m_claw.getDistanceFromClaw() <= kClaw.objectRange;
+        } else {
+            return Math.abs(m_claw.getEncoderPosition() - kClaw.openPosition) <= kClaw.encoderOffset;
+        }
     }
 
 }
