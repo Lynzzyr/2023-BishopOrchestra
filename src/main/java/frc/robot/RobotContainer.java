@@ -4,43 +4,35 @@
 
 package frc.robot;
 
-import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kOperator;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.OpenClaw;
-import frc.robot.commands.PivotManualMove;
-import frc.robot.commands.TelescopeTo;
-import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.PivotZeroEncoder;
-import frc.robot.commands.Intake.RollerMove;
-import frc.robot.commands.Intake.WristMove;
-import frc.robot.commands.auto.Auto;
-import frc.robot.subsystems.Candle;
-import frc.robot.subsystems.Claw;
-import frc.robot.Constants.kDrivetrain.kDriveteam;
-import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
-import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
-import frc.robot.commands.GearShift;
-import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.commands.ArmRotation;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Intake.IntakeRoller;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import edu.wpi.first.math.trajectory.Trajectory;
-import frc.robot.subsystems.Telescope;
-
-import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kOperator;
+
+import frc.robot.commands.ArmRotation;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.GearShift;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.TelescopeTo;
+import frc.robot.commands.Intake.IntakeHandoffSequence;
+import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.PivotZeroEncoder;
+import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Telescope;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeRoller;
+import frc.robot.subsystems.Intake.IntakeWrist;
 
 
 /**
@@ -156,7 +148,7 @@ public class RobotContainer
         joystickMain.a()
             .whileTrue(seq_intakePickup)
             .whileFalse(seq_intakeHandoff);
-        
+
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
@@ -177,15 +169,25 @@ public class RobotContainer
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
-        joystickSecondary.povLeft()
-            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
+        // joystickSecondary.povLeft()
+            // .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+
+        // joystickSecondary.povUp()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToTop, kTelescope.kDestinations.kExtended));
+        // joystickSecondary.povRight()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, kTelescope.kDestinations.kMid));
+        // joystickSecondary.povDown()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         joystickSecondary.x()
             .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
         joystickSecondary.b()
             .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+
+        // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
+        // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
     }
 
     

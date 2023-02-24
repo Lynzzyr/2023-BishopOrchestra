@@ -23,6 +23,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final ShuffleboardTab sb_armTab;
   private final GenericEntry absolutePosition, angle;
 
+  private double prevPos;
+
 
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
@@ -101,6 +103,14 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   
   public double getAngle(){
     return getMeasurement()*360;
+  }
+
+  public double getPrevPos() {
+    return prevPos;
+  }
+
+  public void setPrevPos(double prevPos) {
+    this.prevPos = prevPos;
   }
 
   @Override

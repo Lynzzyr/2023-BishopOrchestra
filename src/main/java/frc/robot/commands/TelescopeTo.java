@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kTelescope;
 import frc.robot.subsystems.Telescope;
 
 public class TelescopeTo extends CommandBase {
@@ -32,20 +33,16 @@ public class TelescopeTo extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-
+        if (setPoint == kTelescope.kDestinations.kRetracted) {
+            sys_telescope.stopExtending();
+        }
+        sys_telescope.setPrevPos(setPoint);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (sys_telescope.getSwitch().getActiveLimitSwitch()) {
-            return true;
-        }
-        
-        //else if (Math.abs(setPoint - sys_telescope.getDistance()) <= 1) {
-        //     return true;
-        // }
-        return false;
+        return sys_telescope.getSwitch() || Math.abs(setPoint - sys_telescope.getDistance()) <= 0.2;
     }
 
 }
