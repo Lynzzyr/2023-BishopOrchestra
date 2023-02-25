@@ -297,9 +297,10 @@ public final class Constants {
         public static final int id_motWrist                     = 34;
         public static final int id_motRoller                    = 28;
 
-        public static final int chnl_encWrist                   = 0;
+        public static final int port_encPivot                   = 5;
+        public static final int port_encWrist                   = 0;
 
-        public static final double kPivotP                      = 100; /* placeholder */
+        public static final double kPivotP                      = 25; /* testing */
         public static final double kWristP                      = 20;
 
         public static final double kPivotI                      = 0.0; /* placeholder */
@@ -308,28 +309,26 @@ public final class Constants {
         public static final double kPivotD                      = 0.0; /* placeholder */
         public static final double kWristD                      = 0.0; /* placeholder */
 
+        public static final int kIntakeCurrentLimit             = 30;
+
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
-                public static final double kPivotExtended       = -4.5; /* -6.6 */
-                public static final double kPivotStoring        = -2.3; /* 0 */
+                public static final double kPivotExtended       = 0.36;
+                public static final double kPivotHugging        = 0.11;
+                public static final double kPivotTestA          = 0.13;
+                public static final double kPivotTestB          = 0.3;
             }
 
             public static final class kWristSetpoints {
                 public static final double kWristPickup         = 0.77;
                 public static final double kWristHandoff        = 0.41;
-                public static final double kWristStoring        = 0.0;
+                public static final double kWristStoring        = 0.0; /* placeholder */
             }
         }
 
         public static final class kVoltageLimits {
-            public static final double kPivotVoltageLimit       = 12;
+            public static final double kPivotVoltageLimit       = 6; /* testing */
             public static final double kWristVoltageLimit       = 6;
-        }
-
-        public static final class kCurrentLimits {
-            public static final int kPivotCurrentLimit          = 30;
-            public static final int kWristCurrentLimit          = 30;
-            public static final int kRollerCurrentLimit         = 30;
         }
     }
 

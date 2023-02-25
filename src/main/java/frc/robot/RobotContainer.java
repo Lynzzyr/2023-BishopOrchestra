@@ -4,33 +4,32 @@
 
 package frc.robot;
 
-
 import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
-import frc.robot.Constants.kClaw;
-import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
+import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.OpenClaw;
+import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotZeroEncoder;
+import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.Auto;
-import frc.robot.commands.ConeNodeAim;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
@@ -61,9 +60,12 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotZeroEncoder cmd_pivotZero;
+    private final PivotManualMove cmd_pivotManualUp;
+    private final PivotManualMove cmd_pivotManualDown;
     private final Limelight sys_limelight;
     private final ConeNodeAim cmd_coneNodeAim;
+    private final PivotMove cmd_pivotTestA;
+    private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -113,9 +115,12 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
+        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
+        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
+        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -153,15 +158,12 @@ public class RobotContainer
 
         joystickMain.a()
             .whileTrue(seq_intakePickup)
-            .whileFalse(seq_intakeHandoff);
-
-        joystickMain.rightStick()
-            .onTrue(cmd_pivotZero);
+            .onFalse(seq_intakeHandoff);
 
         joystickMain.x()
             .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
-
+        
         joystickMain.y()
             .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
@@ -175,6 +177,14 @@ public class RobotContainer
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
+        
+        joystickMain.povUp()
+            .onTrue(cmd_pivotTestA);
+            // .whileTrue(cmd_pivotManualUp);
+        
+        joystickMain.povDown()
+            .onTrue(cmd_pivotTestB);
+            // .whileTrue(cmd_pivotManualDown);
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));

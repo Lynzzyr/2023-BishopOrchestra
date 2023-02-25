@@ -32,10 +32,10 @@ public class IntakeWrist extends PIDSubsystem
     motor = new CANSparkMax(kIntake.id_motWrist, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
-    //TODO: Set a current limit
+    motor.setSmartCurrentLimit(kIntake.kIntakeCurrentLimit);
     motor.burnFlash();
 
-    encoder = new DutyCycleEncoder(kIntake.chnl_encWrist);
+    encoder = new DutyCycleEncoder(kIntake.port_encWrist);
 
     getController().setTolerance(0.1);
 

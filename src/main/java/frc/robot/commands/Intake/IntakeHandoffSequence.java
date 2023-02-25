@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intake;
 
+import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Intake.IntakePivot;
@@ -17,7 +18,8 @@ public class IntakeHandoffSequence extends SequentialCommandGroup
   {
     addCommands
     (
-      new WristMove(wrist, kWristSetpoints.kWristHandoff)
+      new WristMove(wrist, kWristSetpoints.kWristHandoff),
+      new PivotMove(pivot, kPivotSetpoints.kPivotHugging)
     );
   }
 }

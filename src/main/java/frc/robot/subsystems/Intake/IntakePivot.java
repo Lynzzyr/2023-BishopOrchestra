@@ -5,14 +5,14 @@
 package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.kIntake;
-
+import frc.robot.Constants.kIntake.kVoltageLimits;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 public class IntakePivot extends PIDSubsystem
 {
   private final CANSparkMax motor;
-  private final RelativeEncoder encoder;
+  private final DutyCycleEncoder encoder;
 
   private final ShuffleboardTab tab_intake;
   private final GenericEntry kP, kI, kD, encPos;
@@ -32,17 +32,17 @@ public class IntakePivot extends PIDSubsystem
     motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
-    motor.setSmartCurrentLimit(kIntake.kCurrentLimits.kPivotCurrentLimit);
-
-    encoder = motor.getEncoder();
-
+    motor.setSmartCurrentLimit(kIntake.kIntakeCurrentLimit);
+    motor.setInverted(true);
     motor.burnFlash();
+
+    encoder = new DutyCycleEncoder(kIntake.port_encPivot);
 
     tab_intake = Shuffleboard.getTab("Intake");
     kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
     kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
     kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
-    encPos = tab_intake.add("Pivot Rel Pos", getMeasurement()).getEntry();
+    encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
   }
 
   @Override
@@ -66,12 +66,7 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public double getMeasurement()
   {
-    return getPivotPos();
-  }
-
-  public double getPivotPos()
-  {
-    return encoder.getPosition();
+    return encoder.getAbsolutePosition();
   }
 
   public void pivotControl(double voltage)
@@ -79,15 +74,10 @@ public class IntakePivot extends PIDSubsystem
     motor.setVoltage(voltage);
   }
 
-  public void zeroEncoder()
-  {
-    encoder.setPosition(0);
-  }
-
   @Override
   public void periodic()
   {
     super.periodic();
-    encPos.setDouble(getPivotPos());
+    encPos.setDouble(encoder.getAbsolutePosition());
   }
 }

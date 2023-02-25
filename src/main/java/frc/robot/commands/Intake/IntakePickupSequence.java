@@ -14,7 +14,7 @@ import frc.robot.subsystems.Intake.IntakeRoller;
 public class IntakePickupSequence extends ParallelCommandGroup {
   public IntakePickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
     addCommands(
-      // new PivotMove(pivot, kPivotSetpoints.kPivotExtended),
+      new PivotMove(pivot, kPivotSetpoints.kPivotExtended),
       new WristMove(wrist, kWristSetpoints.kWristPickup),
       new RollerMove(roller, 3.6)
     );
