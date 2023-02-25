@@ -4,17 +4,16 @@
 
 package frc.robot;
 
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import frc.robot.Constants.kArmSubsystem;
-import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
@@ -26,6 +25,8 @@ import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotZeroEncoder;
 import frc.robot.commands.auto.Auto;
+import frc.robot.commands.ConeNodeAim;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -61,6 +62,8 @@ public class RobotContainer
     // Commands
     private final DefaultDrive cmd_defaultDrive;
     private final PivotZeroEncoder cmd_pivotZero;
+    private final Limelight sys_limelight;
+    private final ConeNodeAim cmd_coneNodeAim;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -111,6 +114,8 @@ public class RobotContainer
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
         cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        sys_limelight = new Limelight(joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -195,6 +200,9 @@ public class RobotContainer
 
         // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
         // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
+
+        joystickMain.b()
+            .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
     }
 
     
@@ -218,5 +226,3 @@ public class RobotContainer
     }
 
 }
-
-

@@ -1,0 +1,28 @@
+{
+    "fiducials": [
+        {
+        "family": "apriltag3_16h5_classic",
+        "id": 1,
+        "size": 14.5,
+        "transform": [
+            1, 0, 0, 0,
+            0, 1, 0, 0, 
+            0, 0, 1, 0.38, 
+            0, 0, 0, 1
+        ],
+        "unique": 1
+        },
+        {
+        "family": "apriltag3_16h5_classic",
+        "id": 2,
+        "size": 14.5,
+        "transform": [
+            1, 0, 0, 0,
+            0, 1, 0, 2.215,
+            0, 0, 1, 0.38,
+            0, 0, 0, 1
+        ],
+        "unique": 1
+        }
+    ]
+}
