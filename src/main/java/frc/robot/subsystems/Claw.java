@@ -38,8 +38,6 @@ public class Claw extends SubsystemBase {
 
         clawSensor.setRangingMode(RangingMode.Short, 20);
 
-        zeroEncoder();
-
         if (debug) {
             clawTab = Shuffleboard.getTab("Claw");
 
@@ -136,7 +134,7 @@ public class Claw extends SubsystemBase {
      */
 
     public void closeClaw() {
-        clawMot.set(ControlMode.Position, kClaw.closePosition);
+        clawMot.set(ControlMode.Position, kClaw.coneClosePosition);
     }
 
     /**
@@ -171,7 +169,8 @@ public class Claw extends SubsystemBase {
      */
 
     public void zeroEncoder() {
-        clawMot.setSelectedSensorPosition(0);
+        clawMot.setSelectedSensorPosition((0.755 - getDutyPosition()) * kClaw.dutyCycleRatio);
+        // clawMot.setSelectedSensorPosition(0);
     }
 
     /**
@@ -191,7 +190,7 @@ public class Claw extends SubsystemBase {
     public boolean isStalled() {
         double velo = getEncoderVelocity();
         if (clawMot.getSupplyCurrent() >= 0.1) {
-            if (velo <= 30) {
+            if (velo <= 20) {
                 //motor stalled
                 return true;
             } else {
@@ -229,7 +228,7 @@ public class Claw extends SubsystemBase {
      */
 
     public double getDutyPosition() {
-        return clawDutyEncoder.get();
+        return clawDutyEncoder.getAbsolutePosition();
     }
 
     /**

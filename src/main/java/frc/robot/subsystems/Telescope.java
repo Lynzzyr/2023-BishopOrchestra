@@ -43,7 +43,7 @@ public class Telescope extends SubsystemBase {
         mot_extender = new CANSparkMax(Constants.kTelescope.kDeviceID.MOTOR_CAN_ID, MotorType.kBrushless);
         mot_extender.restoreFactoryDefaults();
         
-        mot_extender.setIdleMode(IdleMode.kCoast);
+        mot_extender.setIdleMode(IdleMode.kBrake);
         mot_extender.setInverted(true);
         mot_extender.setSmartCurrentLimit(30);
 

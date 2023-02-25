@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -45,6 +46,8 @@ public class Drivetrain extends SubsystemBase {
 
     private final WPI_Pigeon2 m_gyro;
     private final DifferentialDriveOdometry m_odometry;
+
+    private double currentRampRate = kDriveteam.rampRate;
 
     private final ShuffleboardTab sb_drivetrainTab;
     private final GenericEntry nt_leftVelocity;
@@ -190,6 +193,17 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.configOpenloopRamp(seconds);
         mot_rightCentreDrive.configOpenloopRamp(seconds);
         mot_rightRearDrive.configOpenloopRamp(seconds);
+
+        currentRampRate = seconds;
+    }
+
+    /**
+     * Gets the current ramprate
+     * @return seconds
+     */
+
+    public double getRampRate() {
+        return currentRampRate;
     }
 
     /**

@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kOperator;
 
@@ -146,10 +146,6 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, false))
-            .onFalse(new OpenClaw(sys_claw, false));
-        
         joystickMain.a()
             .whileTrue(seq_intakePickup)
             .whileFalse(seq_intakeHandoff);
@@ -157,20 +153,13 @@ public class RobotContainer
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
-        //TODO: FIX zeroing
+        joystickMain.x()
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
-
-        joystickMain.povLeft()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(-0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
-
-        joystickMain.povRight()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
-
-
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
@@ -195,9 +184,14 @@ public class RobotContainer
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         joystickSecondary.x()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
+            joystickSecondary.a()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
+            joystickSecondary.y()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
+        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
 
         // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
         // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
