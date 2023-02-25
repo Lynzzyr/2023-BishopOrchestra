@@ -6,15 +6,15 @@ package frc.robot;
 
 
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
@@ -159,16 +159,18 @@ public class RobotContainer
             .onTrue(cmd_pivotZero);
 
         joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
             .onFalse(cmd_midSpeed);
+        // joystickMain.leftBumper()
+        //     .toggleOnTrue(Commands.startEnd(cmd_lowSpeed, cmd_highSpeed, sys_drivetrain));
 
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)

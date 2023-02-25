@@ -7,7 +7,6 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -48,6 +47,8 @@ public class Drivetrain extends SubsystemBase {
     private final DifferentialDriveOdometry m_odometry;
 
     private double currentRampRate = kDriveteam.rampRate;
+    private double forwardSpeed = kDriveteam.defaultSpeedMultiplier;
+    private double turningSpeed = kDriveteam.defaultTurningMultiplier;
 
     private final ShuffleboardTab sb_drivetrainTab;
     private final GenericEntry nt_leftVelocity;
@@ -61,10 +62,6 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_gyroRoll;
     private final GenericEntry nt_poseMetersX;
     private final GenericEntry nt_poseMetersY;
-
-    private final ShuffleboardTab sb_driveTab;
-    private final GenericEntry nt_turningSpeedEntry;
-    private final GenericEntry nt_forwardSpeedEntry;
 
 
     public Drivetrain() {
@@ -123,10 +120,6 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
         nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
         nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
-
-        sb_driveTab = Shuffleboard.getTab("Drive Team");
-        nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
-        nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
     }
 
     /**
@@ -213,8 +206,8 @@ public class Drivetrain extends SubsystemBase {
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
         m_diffDrive.arcadeDrive(
-            xSpeed * nt_forwardSpeedEntry.getDouble(1),
-            zRotation * nt_turningSpeedEntry.getDouble(1));
+            xSpeed * forwardSpeed,
+            zRotation * turningSpeed);
     }
 
     /**
@@ -393,8 +386,8 @@ public class Drivetrain extends SubsystemBase {
 
     public void setSpeed(double speed, double turningSpeed) {
         //updating the multipliers for the drive
-        nt_forwardSpeedEntry.setDouble(speed);
-        nt_turningSpeedEntry.setDouble(turningSpeed);
+        forwardSpeed = speed;
+        this.turningSpeed = turningSpeed;
     }
 
     // ----------
