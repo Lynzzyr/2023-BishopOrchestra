@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kClaw.kClawState;
 
 public class Claw extends SubsystemBase {
 
@@ -21,6 +22,8 @@ public class Claw extends SubsystemBase {
     private final TimeOfFlight clawSensor;
 
     private final DutyCycleEncoder clawDutyEncoder;
+
+    private kClawState currentState = kClawState.kOpen;
 
     private ShuffleboardTab clawTab;
     private GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry, dutyEncoderEntry;
@@ -126,6 +129,7 @@ public class Claw extends SubsystemBase {
      */
 
     public void openClaw() {
+        currentState = kClawState.kOpen;
         clawMot.set(ControlMode.Position, kClaw.openPosition);
     }
 
@@ -134,6 +138,7 @@ public class Claw extends SubsystemBase {
      */
 
     public void closeClaw() {
+        currentState = kClawState.kClose;
         clawMot.set(ControlMode.Position, kClaw.coneClosePosition);
     }
 
@@ -142,7 +147,8 @@ public class Claw extends SubsystemBase {
      * @param pos position
      */
 
-    public void clawGoTo(double pos) {
+    public void clawGoTo(double pos, kClawState state) {
+        currentState = state;
         clawMot.set(ControlMode.Position, pos);
     }
 
@@ -237,6 +243,10 @@ public class Claw extends SubsystemBase {
 
     public void resetDutyEncoder() {
         clawDutyEncoder.reset();
+    }
+
+    public kClawState getState() {
+        return currentState;
     }
 
 }

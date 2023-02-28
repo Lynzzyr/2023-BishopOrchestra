@@ -125,10 +125,10 @@ public final class Constants {
         public static final int currentLimit                     = 20;
 
         public static final double openPosition                  = 3000;
-        public static final double coneClosePosition             = 21500;
+        public static final double coneClosePosition             = 19000;
         public static final double cubeClosePosition             = 16400;
         
-        public static final int stallTime                        = 20;
+        public static final int stallTime                        = 40;
 
         public static final double encoderOffset                 = 400;
 
@@ -141,6 +141,11 @@ public final class Constants {
         public static final double objectRange                   = 150;
 
         public static final int dutyCycleRatio                   = 111538;
+
+        public static enum kClawState {
+            kOpen,
+            kClose
+        }
 
     }
 

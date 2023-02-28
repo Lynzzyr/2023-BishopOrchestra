@@ -7,12 +7,14 @@ package frc.robot;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kClaw.kClawState;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.ConeNodeAim;
@@ -160,13 +162,27 @@ public class RobotContainer
             .whileTrue(seq_intakePickup)
             .onFalse(seq_intakeHandoff);
 
+        // joystickMain.x()
+        //     .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
+        //     .onFalse(new OpenClaw(sys_claw, false));
+
         joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
-            .onFalse(new OpenClaw(sys_claw, false));
+            .onTrue(Commands.either(
+                new CloseClaw(sys_claw, kClaw.coneClosePosition),
+                new OpenClaw(sys_claw, false),
+                () -> sys_claw.getState() == kClawState.kOpen)
+            );
+        
+        // joystickMain.y()
+        //     .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
+        //     .onFalse(new OpenClaw(sys_claw, false));
         
         joystickMain.y()
-            .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
-            .onFalse(new OpenClaw(sys_claw, false));
+            .onTrue(Commands.either(
+                new CloseClaw(sys_claw, kClaw.cubeClosePosition),
+                new OpenClaw(sys_claw, false),
+                () -> sys_claw.getState() == kClawState.kOpen)
+            );
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)

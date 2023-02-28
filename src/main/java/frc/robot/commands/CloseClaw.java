@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kClaw.kClawState;
 import frc.robot.subsystems.Claw;
 
 public class CloseClaw extends CommandBase {
@@ -23,7 +24,7 @@ public class CloseClaw extends CommandBase {
     @Override
     public void initialize() {
         stallTimer = 0;
-        m_claw.clawGoTo(position);
+        m_claw.clawGoTo(position, kClawState.kClose);
     }
 
     @Override
