@@ -6,18 +6,12 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -31,9 +25,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  // Path following trajectory
-  private PathPlannerTrajectory trajectory;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,12 +32,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // Load trajectory paths
-    trajectory = PathPlanner.loadPath(kTrajectoryPath.path1, new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration));
-
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer(trajectory);
+    m_robotContainer = new RobotContainer();
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
@@ -126,30 +114,4 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
   }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
-
-  @Override
-  public void testInit() {
-
-    // Set brake mode
-    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
-
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
-
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {}
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
 }

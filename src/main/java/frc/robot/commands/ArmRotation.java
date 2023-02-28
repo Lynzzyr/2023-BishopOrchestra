@@ -23,6 +23,7 @@ public class ArmRotation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initialize arm");
     sys_arm.setSetpoint(setpoint);
     sys_arm.enable();
   

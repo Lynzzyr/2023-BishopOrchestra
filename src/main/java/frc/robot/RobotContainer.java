@@ -4,17 +4,26 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kClaw.kClawState;
+
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.ConeNodeAim;
@@ -26,7 +35,8 @@ import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.auto.Auto;
+import frc.robot.commands.auto.MidConeAuto;
+
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -36,7 +46,6 @@ import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -56,6 +65,11 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
+    private final Limelight sys_limelight;
+    public final Claw sys_claw;
+    public final Candle sys_candle;
+    public final ArmPIDSubsystem sys_armPIDSubsystem;
+    public final Telescope sys_telescope;
     private final IntakePivot sys_intakePivot;
     private final IntakeWrist sys_intakeWrist;
     private final IntakeRoller sys_intakeRoller;
@@ -64,7 +78,6 @@ public class RobotContainer
     private final DefaultDrive cmd_defaultDrive;
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
-    private final Limelight sys_limelight;
     private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
@@ -72,30 +85,25 @@ public class RobotContainer
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
     private final IntakeHandoffSequence seq_intakeHandoff;
-    public final Claw sys_claw;
-    public final Candle sys_candle;
-    public final ArmPIDSubsystem sys_ArmPIDSubsystem;
-    public final Telescope sys_telescope;
 
-
+    // Gear shifting
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
 
-    // // Trajectory
-    private PathPlannerTrajectory m_trajectory;
+    // Trajectory & autonomous path chooser
+    private PathPlannerTrajectory[] m_paths = new PathPlannerTrajectory[kTrajectoryPath.paths.length];
+    private ShuffleboardTab sb_driveteam;
+    private SendableChooser<PathPlannerTrajectory> sc_choosePath;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(PathPlannerTrajectory trajectory) {
+    public RobotContainer() {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
-
-        // // Trajectory paths
-        m_trajectory = trajectory;
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
@@ -109,11 +117,27 @@ public class RobotContainer
         
         sys_claw = new Claw();
         sys_candle = new Candle();
-        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
+        sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+
+        // Trajectory & autonomous path chooser
+        PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
+
+        for (int i = 0; i < m_paths.length; i++) {
+            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints, true);
+        }
+
+        sb_driveteam = Shuffleboard.getTab("Drive Team");
+        sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
+        sc_choosePath.setDefaultOption(kTrajectoryPath.paths[0], m_paths[0]);
+        for (int i = 0; i < m_paths.length; i++) {
+            sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
+        }
+        sb_driveteam.add("Auto path", sc_choosePath);
+        
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
@@ -217,14 +241,14 @@ public class RobotContainer
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         joystickSecondary.x()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
+            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
+            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
             joystickSecondary.a()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
+            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
             joystickSecondary.y()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
-        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
+            .onTrue(new ArmRotation(sys_armPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
+        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
 
         // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
         // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
@@ -243,12 +267,17 @@ public class RobotContainer
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
+        sys_armPIDSubsystem.disable();
+
+        PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
+
+
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
         // Reset odometry
-        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+        sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, m_trajectory)
+        return new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }

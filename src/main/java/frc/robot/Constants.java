@@ -49,23 +49,23 @@ public final class Constants {
         }
 
         public static final class kCANCoder {
-            public static final int id_leftEncoder              = 30;
-            public static final int id_rightEncoder             = 29;
+            public static final int id_leftEncoder              = 29;
+            public static final int id_rightEncoder             = 30;
             public static final double enc_CountsPerRevolution  = 4096;
             public static final double enc_SensorCoefficient    = (Math.PI * kDrivetrain.kWheel.wheelDiameter) / enc_CountsPerRevolution;
             public static final String enc_UnitString           = "m";
         }
 
         public static final class kWheel {
-            public static final double wheelDiameter            = 0.1; // metres, placeholder value
+            public static final double wheelDiameter            = 0.15;
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0.08122;
-        public static final double kvVolts                      = 2.796;
-        public static final double kaVolts                      = 0.28485;
+        public static final double ksVolts                      = 0.18289;
+        public static final double kvVolts                      = 1.9159;
+        public static final double kaVolts                      = 0.29742;
 
-        public static final double kPDriveVel                   = 3.3466;
+        public static final double kPDriveVel                   = 2.5398;
 
         public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
@@ -74,8 +74,8 @@ public final class Constants {
         public static final class kAuto {
             public static final double kMaxVolts                = 10;
 
-            public static final double kMaxSpeed                = 3;
-            public static final double kMaxAcceleration         = 3;
+            public static final double kMaxSpeed                = 2;
+            public static final double kMaxAcceleration         = 2;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
@@ -157,7 +157,17 @@ public final class Constants {
     }
 
     public static final class kTrajectoryPath {
-        public static final String path1 = "Path1";
+        public static final String TURN_LEFT_PLACE_AND_BALANCE
+            = "TURN LEFT place and balance";
+        public static final String TURN_RIGHT_PLACE_AND_BALANCE
+            = "TURN RIGHT place and balance";
+        public static final String PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place and leave community no balance";
+
+        public static final String[] paths = new String[] {
+            TURN_LEFT_PLACE_AND_BALANCE,
+            TURN_RIGHT_PLACE_AND_BALANCE,
+            PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE};
     }
 
     public static final class kBalancing {
@@ -165,7 +175,7 @@ public final class Constants {
         public static final double maxAngle                     = 33.25;
         public static final double angleTolerance               = 1.5;
 
-        public static final double kP                           = 0.04;
+        public static final double kP                           = 0.0365;
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
@@ -179,33 +189,33 @@ public final class Constants {
         public static final double kD_chargeStation             = 0;
     }
     public static class kCANdle {
-        public final static int staticTime                      = 750;
+        public static final int staticTime                      = 750;
 
         public static class kConfig {
 
-            public final static int CANID                       = 19;
-            public final static int LEDCount                    = 94;
+            public static final int CANID                       = 19;
+            public static final int LEDCount                    = 94;
 
-            public final static int LEDInnerRight               = 30;
-            public final static int LEDInnerLeft                = 26;
-            public final static int LEDOutter                   = 15;
+            public static final int LEDInnerRight               = 30;
+            public static final int LEDInnerLeft                = 26;
+            public static final int LEDOutter                   = 15;
         }
 
         public static class kColors {
 
-            public final static int[] idle                      = {255, 134 , 0};
-            public final static int[] cube                      = {142, 39, 245};
-            public final static int[] cone                      = {237, 120, 0};
+            public static final int[] idle                      = {255, 134 , 0};
+            public static final int[] cube                      = {142, 39, 245};
+            public static final int[] cone                      = {237, 120, 0};
 
-            public final static int LEDSinCount                 = 8;
-            public final static double kSpeed                   = 0.5;
+            public static final int LEDSinCount                 = 8;
+            public static final double kSpeed                   = 0.5;
 
-            public final static double sinFrequency             = 0.025;
-            public final static double sinFrequencySpeed        = 20;
+            public static final double sinFrequency             = 0.025;
+            public static final double sinFrequencySpeed        = 20;
 
-            public final static int chargeSpeed                 = 4;
+            public static final int chargeSpeed                 = 4;
 
-            public final static double gameSpeed                = 0.2;
+            public static final double gameSpeed                = 0.2;
             
         }
 
@@ -220,9 +230,9 @@ public final class Constants {
     }
 
     public static class kArmSubsystem {
-        public final static int kMotor1ID                       = 32;
-        public final static int kMotor2ID                       = 33;
-        public final static int kEncoderChannel                 = 4;
+        public static final int kMotor1ID                       = 32;
+        public static final int kMotor2ID                       = 33;
+        public static final int kEncoderChannel                 = 4;
 
         public final static double kVoltageLimit                = 7.2; //60% speed
         public final static int kCurrentLimit                   = 30;
@@ -231,12 +241,13 @@ public final class Constants {
         public final static double knintydegreepos              = -0.042;
 
         public static class kPID {
-            public final static double kP                       = 50;
-            public final static double kI                       = 0;
-            public final static double kD                       = 0;
+            public static final double kP                       = 50;
+            public static final double kI                       = 0;
+            public static final double kD                       = 0;
         }
     
-        public static class kSetpoints{
+        public static class kSetpoints {
+            public final static double kRestingOnIntake         = 0.55;
 
             public final static double kToTop                   = 0.09; //placeholder
             public final static double kToMid                   = 0.05; //placeholder
