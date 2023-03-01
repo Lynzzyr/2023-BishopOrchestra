@@ -70,9 +70,9 @@ public class RobotContainer
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_armPIDSubsystem;
     public final Telescope sys_telescope;
-    private final IntakePivot sys_intakePivot;
-    private final IntakeWrist sys_intakeWrist;
-    private final IntakeRoller sys_intakeRoller;
+    public final IntakePivot sys_intakePivot;
+    public final IntakeWrist sys_intakeWrist;
+    public final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
