@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -20,6 +21,7 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTrajectoryPath;
+import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.ClawMovement;
 import frc.robot.commands.ConeNodeAim;
@@ -177,9 +179,9 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        joystickMain.a()
-            .whileTrue(seq_intakePickup)
-            .onFalse(seq_intakeHandoff);
+        // joystickMain.a()
+        //     .whileTrue(seq_intakePickup)
+        //     .onFalse(seq_intakeHandoff);
 
         // joystickMain.x()
         //     .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
@@ -192,9 +194,12 @@ public class RobotContainer
         //         () -> sys_claw.getState() == kClawState.kOpen)
         //     );
         joystickMain.x()
-            .onTrue(new ClawMovement(sys_claw, kClaw.cubeClosePosition).withTimeout(kClaw.timeout));
+            .onTrue(new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout));
 
         joystickMain.y()
+            .onTrue(new ClawMovement(sys_claw, kClaw.cubeClosePosition).withTimeout(kClaw.timeout));
+
+        joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
         
         // joystickMain.y()
@@ -255,6 +260,27 @@ public class RobotContainer
 
         joystickMain.b()
             .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
+
+        joystickSecondary.leftStick()
+            .onTrue(Commands.runOnce(
+                () -> sys_candle.setAnimation(
+                    AnimationTypes.Static,
+                    kCANdle.kColors.cone[0],
+                    kCANdle.kColors.cone[1],
+                    kCANdle.kColors.cone[2]
+                )
+            )
+        );
+        joystickSecondary.rightStick()
+            .onTrue(Commands.runOnce(
+                () -> sys_candle.setAnimation(
+                    AnimationTypes.Static,
+                    kCANdle.kColors.cube[0],
+                    kCANdle.kColors.cube[1],
+                    kCANdle.kColors.cube[2]
+                )
+            )
+        );
     }
 
     

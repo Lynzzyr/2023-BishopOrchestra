@@ -25,7 +25,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   private double prevPos;
 
-  private final boolean debug = false;
+  private final boolean debug = true;
 
 
   /** Creates a new ArmPIDSubsystem. */
