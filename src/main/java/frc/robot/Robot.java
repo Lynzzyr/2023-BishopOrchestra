@@ -6,10 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,11 +40,10 @@ public class Robot extends TimedRobot {
     new Trigger(this::isEnabled)
       .negate()
       .debounce(5)
-      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_claw, m_robotContainer.sys_telescope))
+      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_telescope))
       .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem));
 
-    Timer.delay(0.1);
-    m_robotContainer.sys_claw.zeroEncoder();
+    
   }
 
   /**
@@ -68,6 +65,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.sys_claw.disable();
     if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
       m_robotContainer.sys_candle.idleAnimation();
     }
@@ -105,7 +103,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // Set in game animation
     m_robotContainer.sys_candle.inGameAnimation();
-    m_robotContainer.sys_claw.zeroEncoder();
     m_robotContainer.sys_telescope.setNeutralMode(IdleMode.kBrake);
 
     // Set brake mode

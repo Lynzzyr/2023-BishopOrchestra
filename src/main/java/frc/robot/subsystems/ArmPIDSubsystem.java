@@ -20,10 +20,12 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor1;
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
-  private final ShuffleboardTab sb_armTab;
-  private final GenericEntry absolutePosition;
+  private  ShuffleboardTab sb_armTab;
+  private  GenericEntry absolutePosition, angle;
 
   private double prevPos;
+
+  private final boolean debug = false;
 
 
   /** Creates a new ArmPIDSubsystem. */
@@ -46,12 +48,15 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     m_motor2.setInverted(true);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
-    sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
-   // kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
-   // kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
-    // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
-    absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-   // angle = sb_armTab.add("Angle",0).getEntry();
+    if (debug){
+      sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
+      absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
+      angle = sb_armTab.add("Angle",0).getEntry();
+      //kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
+      //kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
+      //kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
+
+    }
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
@@ -74,11 +79,15 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   public double getMeasurement() { // gets absolute position and returns the value 
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
-     if (ecd_value > 0.8){  // used to fix encoder values
+     if (ecd_value > 0.8){  // used to fix encoder values, the greatest value before the values start again
+      if (debug){
         absolutePosition.setDouble(ecd_value - 1 + Constants.kArmSubsystem.knintydegreepos);
+      }
       return ecd_value -1 + Constants.kArmSubsystem.knintydegreepos;
     }else{
-      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      if (debug){
+      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos); // nintydresspos is the value of the encoder when angle is 0
+      }
       return ecd_value + Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
@@ -117,7 +126,9 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
-    //  angle.setDouble(getAngle());
+      if (debug){
+      angle.setDouble(getAngle());
+      }
 
 
   }

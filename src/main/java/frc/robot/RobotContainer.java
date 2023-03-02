@@ -7,14 +7,12 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -22,26 +20,22 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kClaw.kClawState;
-
 import frc.robot.commands.ArmRotation;
-import frc.robot.commands.CloseClaw;
+import frc.robot.commands.ClawMovement;
 import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
-import frc.robot.commands.OpenClaw;
 import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
-
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
@@ -66,7 +60,8 @@ public class RobotContainer
     // Subsystems
     public final Drivetrain sys_drivetrain;
     private final Limelight sys_limelight;
-    public final Claw sys_claw;
+    // public final Claw sys_claw;
+    public final NewClaw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_armPIDSubsystem;
     public final Telescope sys_telescope;
@@ -115,7 +110,7 @@ public class RobotContainer
         seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
-        sys_claw = new Claw();
+        sys_claw = new NewClaw();
         sys_candle = new Candle();
         sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
@@ -190,23 +185,28 @@ public class RobotContainer
         //     .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
         //     .onFalse(new OpenClaw(sys_claw, false));
 
+        // joystickMain.x()
+        //     .onTrue(Commands.either(
+        //         new CloseClaw(sys_claw, kClaw.coneClosePosition),
+        //         new OpenClaw(sys_claw, false),
+        //         () -> sys_claw.getState() == kClawState.kOpen)
+        //     );
         joystickMain.x()
-            .onTrue(Commands.either(
-                new CloseClaw(sys_claw, kClaw.coneClosePosition),
-                new OpenClaw(sys_claw, false),
-                () -> sys_claw.getState() == kClawState.kOpen)
-            );
+            .onTrue(new ClawMovement(sys_claw, kClaw.cubeClosePosition).withTimeout(kClaw.timeout));
+
+        joystickMain.y()
+            .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
         
         // joystickMain.y()
         //     .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
         //     .onFalse(new OpenClaw(sys_claw, false));
         
-        joystickMain.y()
-            .onTrue(Commands.either(
-                new CloseClaw(sys_claw, kClaw.cubeClosePosition),
-                new OpenClaw(sys_claw, false),
-                () -> sys_claw.getState() == kClawState.kOpen)
-            );
+        // joystickMain.y()
+        //     .onTrue(Commands.either(
+        //         new CloseClaw(sys_claw, kClaw.cubeClosePosition),
+        //         new OpenClaw(sys_claw, false),
+        //         () -> sys_claw.getState() == kClawState.kOpen)
+        //     );
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)

@@ -124,15 +124,19 @@ public final class Constants {
 
         public static final int currentLimit                     = 20;
 
-        public static final double openPosition                  = 3000;
-        public static final double coneClosePosition             = 19000;
-        public static final double cubeClosePosition             = 16400;
+        public static final double outputLimit                   = 3;
+
+        public static final double timeout                       = 2;
+
+        public static final double openPosition                  = 0.77;
+        public static final double coneClosePosition             = 0.545;
+        public static final double cubeClosePosition             = 0.585;
         
         public static final int stallTime                        = 40;
 
-        public static final double encoderOffset                 = 400;
+        public static final double encoderTolerance              = 0.01;
 
-        public static final double kP                            = 0.2;
+        public static final double kP                            = 20;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;
@@ -236,7 +240,7 @@ public final class Constants {
 
         public final static double kVoltageLimit                = 7.2; //60% speed
         public final static int kCurrentLimit                   = 30;
-        public final static double kPositionTolerance           = 0.1;
+        public final static double kPositionTolerance           = 0.01;
         public final static double kg                           = 0.4;
         public final static double knintydegreepos              = -0.042;
 
@@ -263,7 +267,10 @@ public final class Constants {
 
             public final static double kIdling                  = 0.34; // placeholder
         }
+
     }
+
+
 
     public static final class kTelescope {
 

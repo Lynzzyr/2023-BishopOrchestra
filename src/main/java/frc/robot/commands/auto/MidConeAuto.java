@@ -8,12 +8,11 @@ import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.ArmRotation;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.OpenClaw;
+import frc.robot.commands.ClawMovement;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 
 public class MidConeAuto extends SequentialCommandGroup {
@@ -22,14 +21,14 @@ public class MidConeAuto extends SequentialCommandGroup {
                 Drivetrain sys_drivetrain,
                 ArmPIDSubsystem sys_armPIDSubsystem,
                 Telescope sys_telescope,
-                Claw sys_claw,
+                NewClaw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-            new CloseClaw(sys_claw, kClaw.coneClosePosition),
+            new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
             Commands.waitSeconds(0.5),
-            new OpenClaw(sys_claw, false),
+            new ClawMovement(sys_claw, kClaw.openPosition),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
