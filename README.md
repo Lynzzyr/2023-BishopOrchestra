@@ -1,4 +1,4 @@
-# 2023-Bishop
+![Bilby Stampede](https://cdn.discordapp.com/attachments/794885191898365975/1081016440905277460/bishopLogo_3.png)
 
 ## Useful Documentation
 [CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit#gid=1456793576)
@@ -9,20 +9,40 @@
 
 [Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
+## Libraries 
+[LimelightHelpers](https://github.com/LimelightVision/limelightlib-wpijava)
 
-## About The Intake
+[Pheonix](https://store.ctr-electronics.com/software/)
 
-Button Binding (demo/testing): 
-* y - pivot ascending.
-* a - pivot descending. 
-* x - roller inwards. 
-* b - roller outwards. 
-* right_bumper - full sequence. 
+[Rev](https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information)
 
-Button Binding (official): 
-* x - intake down while hold, back up and ready for the arm to grab the game piece from the intake. 
+## Button Bindings
+<p align="center"><b>Comp Configuration<b><p>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+| Binding | Controller | Subsystem/Command | Function | Toggle/Push | 
+|:-------:|:----------:|:------------------|:---------|:-----------:|
+|RT|1|Drivetrain|Accelerate|Push|
+|LT|1|Drivetrain|Reverse|Push|
+|LB|1|Drivetrain|Precision mode|Push|
+|RB|1|Drivetrain|Precision mode|Push|
+|LSB-X|1|Drivetrain|Left-Right|Push|
+|LB|2|Limelight|Target node|Push|
+|DPAD-UP|2|Arm|Place cube top|Push|
+|DPAD-DOWN|2|Arm|Place cube bottom|Push|
+|X|1|Arm|Grab loading zone|Push|
+|A|1|Arm,Intake|Intake handoff|Push|
+
+
+<p align="center"><b>Demo Configuration<b><p>
+
+| Binding | Controller | Subsystem/Command | Function |
+|:-------:|:----------:|:------------------|:---------|
+|Y|TBD|Intake|Pivot up|
+|A|TBD|Intake|Pivot down|
+|X|TBD|Intake|Roller inwards|
+|B|TBD|Intake|Roller outwards|
+
+
 ## CAN ID's
 | CAN | CAN Bus | Component | Subsystem(s) |
 |:---:|:--------|:----------|:-------------|
@@ -51,6 +71,8 @@ Button Binding (official):
 |:---:|:--------|:------|
 |DRV|Drivetrain|Driving|
 |ITK|Intake|Intake|
-|LLA|LimeLight April-Tags|Vision|
+|LLA|LimeLight April-Tags|V/ision|
 |LLR|LimeLight Retro-Reflective|Vision|
 |ELA|ElevatorArm|Telescopic Arm|
+
+<p align="center">(<a href="#readme-top">back to top</a>)</p>
