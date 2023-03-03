@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
       .negate()
       .debounce(5)
       .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_telescope))
-      .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem));
+      .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem, m_robotContainer.sys_claw));
 
     
   }

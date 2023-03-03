@@ -27,7 +27,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   private final boolean debug = true;
 
-
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
     super(new PIDController(Constants.kArmSubsystem.kPID.kP,Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD));
@@ -64,6 +63,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   @Override
   public void useOutput(double voltage, double setpoint) { // outputs the voltage 
+
     if (voltage > Constants.kArmSubsystem.kVoltageLimit - calculateFF()){
       m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit - calculateFF());
     }
@@ -92,6 +92,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     }
     // Return the process variable measurement here 
   }
+
+
 
   public void setPIDFvalues(double kP, double kI, double kD){ // sets PID values
     m_controller.setP(kP);
@@ -129,8 +131,5 @@ public class ArmPIDSubsystem extends PIDSubsystem {
       if (debug){
       angle.setDouble(getAngle());
       }
-
-
-  }
-  
+  }  
 }

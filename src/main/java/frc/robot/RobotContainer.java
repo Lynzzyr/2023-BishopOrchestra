@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
@@ -20,8 +21,10 @@ import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.ArmAdjust;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.ClawMovement;
 import frc.robot.commands.ConeNodeAim;
@@ -33,6 +36,7 @@ import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
+import frc.robot.commands.sequencing.ArmToPos;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
@@ -245,20 +249,74 @@ public class RobotContainer
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, kTelescope.kDestinations.kMid));
         // joystickSecondary.povDown()
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
-
+        
+        joystickSecondary.y()
+        .onTrue(
+            new ArmToPos(
+                sys_telescope, 
+                sys_armPIDSubsystem, 
+                kArmSubsystem.kSetpoints.kToTop, 
+                kTelescope.kDestinations.kExtended
+            )    
+        ); // pickup from floor
+                
         joystickSecondary.x()
-            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kConeMid,
+                    kTelescope.kDestinations.kRetracted
+                )
+            );
+
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
-            joystickSecondary.a()
-            .onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
-            joystickSecondary.y()
-            .onTrue(new ArmRotation(sys_armPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
-        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kConeAbove, 
+                    kTelescope.kDestinations.kRetracted)
+            );
 
-        // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
-        // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
+        joystickSecondary.a()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kToMid, 
+                    kTelescope.kDestinations.kRetracted
+                )
+            );
 
+        joystickSecondary.rightBumper()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kToLoadingshoulder, 
+                    kTelescope.kDestinations.kRetracted
+                )
+            ); // pickup from loading station
+                
+        joystickSecondary.leftBumper()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kIdling, 
+                    kTelescope.kDestinations.kRetracted
+                )
+            );
+
+        // joystickSecondary.rightBumper()
+        //     .onTrue(
+        //         new ArmAdjust(sys_armPIDSubsystem)
+        //     );
+                
+                // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
+                // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
+                
         joystickMain.b()
             .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
 

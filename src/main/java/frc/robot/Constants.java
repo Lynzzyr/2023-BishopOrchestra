@@ -254,6 +254,8 @@ public final class Constants {
             public final static double kRestingOnIntake         = 0.55;
 
             public final static double kToTop                   = 0.095; //place high cube and low cones
+            public final static double kConeMid                 = 0.1;
+            public final static double kConeAbove               = 0.13;
             public final static double kToMid                   = 0.05; //place low cube
 
             public final static double kToGroundFront           = 0.0; //placeholder
