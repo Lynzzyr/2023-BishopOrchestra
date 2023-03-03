@@ -17,8 +17,9 @@ public class IntakeRoller extends SubsystemBase
 {
   private final WPI_TalonFX motor;
 
-  private final ShuffleboardTab tab_intake;
-  private final GenericEntry rollerSpeed;
+  boolean debugMode = false;
+  private ShuffleboardTab tab_intake;
+  private GenericEntry rollerSpeed;
 
   public IntakeRoller()
   {
@@ -26,8 +27,10 @@ public class IntakeRoller extends SubsystemBase
     motor.configFactoryDefault();
     motor.setNeutralMode(NeutralMode.Brake);
 
-    tab_intake = Shuffleboard.getTab("Intake");
-    rollerSpeed = tab_intake.add("Roller Speed", getRollerSpeed()).getEntry();
+    if (debugMode) {
+      tab_intake = Shuffleboard.getTab("Intake");
+      rollerSpeed = tab_intake.add("Roller Speed", getRollerSpeed()).getEntry();
+    }
   }
 
   public double getRollerSpeed()
@@ -43,6 +46,8 @@ public class IntakeRoller extends SubsystemBase
   @Override
   public void periodic()
   {
-    rollerSpeed.setDouble(getRollerSpeed());
+    if (debugMode) {
+      rollerSpeed.setDouble(getRollerSpeed());
+    }
   }
 }

@@ -35,6 +35,7 @@ public class Telescope extends SubsystemBase {
     private static DigitalInput s_maxLimSwitch;
     private static DigitalInput s_minLimSwitch;
 
+    boolean debugMode = false;
     private static HashMap<String, GenericEntry> shuffleboardFields; 
   
 
@@ -59,18 +60,20 @@ public class Telescope extends SubsystemBase {
         s_maxLimSwitch = new DigitalInput(Constants.kTelescope.kDeviceID.MAX_LIMIT_SWITCH_ID);
         s_minLimSwitch = new DigitalInput(Constants.kTelescope.kDeviceID.MIN_LIMIT_SWITCH_ID);
 
-        shuffleboardFields = new HashMap<String, GenericEntry>();
+        if (debugMode) {
+            shuffleboardFields = new HashMap<String, GenericEntry>();
 
-        ShuffleboardLayout limitSwitch = Shuffleboard.getTab("Arm").getLayout("LimSwitch", BuiltInLayouts.kGrid).withSize(2, 1);
-        ShuffleboardLayout encoder = Shuffleboard.getTab("Arm").getLayout("EncoderLayout", BuiltInLayouts.kList);
-        ShuffleboardLayout speed = Shuffleboard.getTab("Arm").getLayout("VelocityArm", BuiltInLayouts.kGrid);
+            ShuffleboardLayout limitSwitch = Shuffleboard.getTab("Arm").getLayout("LimSwitch", BuiltInLayouts.kGrid).withSize(2, 1);
+            ShuffleboardLayout encoder = Shuffleboard.getTab("Arm").getLayout("EncoderLayout", BuiltInLayouts.kList);
+            ShuffleboardLayout speed = Shuffleboard.getTab("Arm").getLayout("VelocityArm", BuiltInLayouts.kGrid);
 
-        shuffleboardFields.put("LimSwitchMax", limitSwitch.add("Max Limit Switch", getMaxLimSwitch()).withWidget(BuiltInWidgets.kBooleanBox).withPosition(0,0).getEntry());
-        shuffleboardFields.put("LimSwitchMin", limitSwitch.add("Min Limit Switch", getMinLimSwitch()).withWidget(BuiltInWidgets.kBooleanBox).withPosition(1, 0).getEntry());
+            shuffleboardFields.put("LimSwitchMax", limitSwitch.add("Max Limit Switch", getMaxLimSwitch()).withWidget(BuiltInWidgets.kBooleanBox).withPosition(0,0).getEntry());
+            shuffleboardFields.put("LimSwitchMin", limitSwitch.add("Min Limit Switch", getMinLimSwitch()).withWidget(BuiltInWidgets.kBooleanBox).withPosition(1, 0).getEntry());
+            
+            shuffleboardFields.put("EncoderData", encoder.add("Encoder Data", getDistance()).withWidget(BuiltInWidgets.kTextView).getEntry());
         
-        shuffleboardFields.put("EncoderData", encoder.add("Encoder Data", getDistance()).withWidget(BuiltInWidgets.kTextView).getEntry());
-    
-        shuffleboardFields.put("SpeedOfArm", speed.add("Speed of Extension", rotationDirection()).withWidget(BuiltInWidgets.kTextView).getEntry());
+            shuffleboardFields.put("SpeedOfArm", speed.add("Speed of Extension", rotationDirection()).withWidget(BuiltInWidgets.kTextView).getEntry());
+        }
     }
 
     public void zeroEncoder() {
@@ -148,12 +151,14 @@ public class Telescope extends SubsystemBase {
 
     @Override
     public void periodic() {
-        shuffleboardFields.get("LimSwitchMax").setBoolean(getMaxLimSwitch());
-        shuffleboardFields.get("LimSwitchMin").setBoolean(getMinLimSwitch());
+        if (debugMode) {
+            shuffleboardFields.get("LimSwitchMax").setBoolean(getMaxLimSwitch());
+            shuffleboardFields.get("LimSwitchMin").setBoolean(getMinLimSwitch());
 
-        shuffleboardFields.get("EncoderData").setDouble(getDistance());
+            shuffleboardFields.get("EncoderData").setDouble(getDistance());
 
-        shuffleboardFields.get("SpeedOfArm").setDouble(rotationDirection());
+            shuffleboardFields.get("SpeedOfArm").setDouble(rotationDirection());
+        }
     }
 
     @Override

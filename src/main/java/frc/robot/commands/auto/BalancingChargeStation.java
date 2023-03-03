@@ -13,9 +13,9 @@ public class BalancingChargeStation extends PIDCommand {
 
     private final Drivetrain m_drivetrain;
 
-    private static final double kP = kBalancing.kP;
-    private static final double kI = kBalancing.kI;
-    private static final double kD = kBalancing.kD;
+    private static double kP = kBalancing.kP;
+    private static double kI = kBalancing.kI;
+    private static double kD = kBalancing.kD;
 
     // Shuffleboard
     boolean debugMode = false;

@@ -22,8 +22,9 @@ public class IntakeWrist extends PIDSubsystem
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  private final ShuffleboardTab tab_intake;
-  private final GenericEntry kP, kI, kD, encPos;
+  boolean debugMode = false;
+  private ShuffleboardTab tab_intake;
+  private GenericEntry kP, kI, kD, encPos;
 
   public IntakeWrist()
   {
@@ -39,11 +40,13 @@ public class IntakeWrist extends PIDSubsystem
 
     getController().setTolerance(0.1);
 
-    tab_intake = Shuffleboard.getTab("Intake");
-    kP = tab_intake.add("kWristP", kIntake.kWristP).getEntry();
-    kI = tab_intake.add("kWristI", kIntake.kWristI).getEntry();
-    kD = tab_intake.add("kWristD", kIntake.kWristD).getEntry();
-    encPos = tab_intake.add("Wrist Abs Pos", getMeasurement()).getEntry();
+    if (debugMode) {
+      tab_intake = Shuffleboard.getTab("Intake");
+      kP = tab_intake.add("kWristP", kIntake.kWristP).getEntry();
+      kI = tab_intake.add("kWristI", kIntake.kWristI).getEntry();
+      kD = tab_intake.add("kWristD", kIntake.kWristD).getEntry();
+      encPos = tab_intake.add("Wrist Abs Pos", getMeasurement()).getEntry();
+    }
   }
 
   @Override
@@ -92,6 +95,8 @@ public class IntakeWrist extends PIDSubsystem
   public void periodic()
   {
     super.periodic();
-    encPos.setDouble(getWristPos());
+    if (debugMode) {
+      encPos.setDouble(getWristPos());
+    }
   }
 }

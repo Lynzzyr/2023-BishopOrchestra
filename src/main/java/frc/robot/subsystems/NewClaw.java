@@ -33,7 +33,7 @@ public class NewClaw extends PIDSubsystem {
 
     private GenericEntry tempEntry, dutyEncoderEntry;
 
-    private final boolean debug = true;
+    private final boolean debug = false;
   
   /** Creates a new NewClaw. */
   public NewClaw() {

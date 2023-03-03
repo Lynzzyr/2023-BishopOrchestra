@@ -22,8 +22,9 @@ public class IntakePivot extends PIDSubsystem
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  private final ShuffleboardTab tab_intake;
-  private final GenericEntry kP, kI, kD, encPos;
+  boolean debugMode = false;
+  private ShuffleboardTab tab_intake;
+  private GenericEntry kP, kI, kD, encPos;
 
   public IntakePivot()
   {
@@ -38,11 +39,13 @@ public class IntakePivot extends PIDSubsystem
 
     encoder = new DutyCycleEncoder(kIntake.port_encPivot);
 
-    tab_intake = Shuffleboard.getTab("Intake");
-    kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
-    kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
-    kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
-    encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
+    if (debugMode) {
+      tab_intake = Shuffleboard.getTab("Intake");
+      kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
+      kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
+      kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
+      encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
+    }
   }
 
   @Override
@@ -78,6 +81,8 @@ public class IntakePivot extends PIDSubsystem
   public void periodic()
   {
     super.periodic();
-    encPos.setDouble(encoder.getAbsolutePosition());
+    if (debugMode) {
+      encPos.setDouble(encoder.getAbsolutePosition());
+    }
   }
 }
