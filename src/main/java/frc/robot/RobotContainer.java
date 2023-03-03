@@ -133,7 +133,8 @@ public class RobotContainer
         for (int i = 0; i < m_paths.length; i++) {
             sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
         }
-        sb_driveteam.add("Auto path", sc_choosePath);
+        sb_driveteam.add("Auto path", sc_choosePath)
+            .withSize(3, 1);
         
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);

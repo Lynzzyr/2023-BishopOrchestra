@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -50,18 +49,20 @@ public class Drivetrain extends SubsystemBase {
     private double forwardSpeed = kDriveteam.defaultSpeedMultiplier;
     private double turningSpeed = kDriveteam.defaultTurningMultiplier;
 
-    private final ShuffleboardTab sb_drivetrainTab;
-    private final GenericEntry nt_leftVelocity;
-    private final GenericEntry nt_rightVelocity;
-    private final GenericEntry nt_leftDistance;
-    private final GenericEntry nt_rightDistance;
-    private final GenericEntry nt_leftTemperature;
-    private final GenericEntry nt_rightTemperature;
-    private final GenericEntry nt_gyroYaw;
-    private final GenericEntry nt_gyroPitch;
-    private final GenericEntry nt_gyroRoll;
-    private final GenericEntry nt_poseMetersX;
-    private final GenericEntry nt_poseMetersY;
+    boolean debugMode = false; // Show Shuffleboard items
+
+    private ShuffleboardTab sb_drivetrainTab;
+    private GenericEntry nt_leftVelocity;
+    private GenericEntry nt_rightVelocity;
+    private GenericEntry nt_leftDistance;
+    private GenericEntry nt_rightDistance;
+    private GenericEntry nt_leftTemperature;
+    private GenericEntry nt_rightTemperature;
+    private GenericEntry nt_gyroYaw;
+    private GenericEntry nt_gyroPitch;
+    private GenericEntry nt_gyroRoll;
+    private GenericEntry nt_poseMetersX;
+    private GenericEntry nt_poseMetersY;
 
 
     public Drivetrain() {
@@ -108,18 +109,20 @@ public class Drivetrain extends SubsystemBase {
         resetGyro();
 
         // Shuffleboard
-        sb_drivetrainTab = Shuffleboard.getTab("Drivetrain");
-        nt_leftVelocity = sb_drivetrainTab.add("Left velocity", getLeftVelocity()).getEntry();
-        nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
-        nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
-        nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
-        nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
-        nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
-        nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
-        nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
-        nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
-        nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
-        nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
+        if (debugMode) {
+            sb_drivetrainTab = Shuffleboard.getTab("Drivetrain");
+            nt_leftVelocity = sb_drivetrainTab.add("Left velocity", getLeftVelocity()).getEntry();
+            nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
+            nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
+            nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
+            nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
+            nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
+            nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
+            nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
+            nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
+            nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
+            nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
+        }
     }
 
     /**
@@ -398,17 +401,19 @@ public class Drivetrain extends SubsystemBase {
         m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // Push data to Shuffleboard
-        nt_leftVelocity.setDouble(getLeftVelocity());
-        nt_rightVelocity.setDouble(getRightVelocity());
-        nt_leftDistance.setDouble(getLeftDistance());
-        nt_rightDistance.setDouble(getRightDistance());
-        nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
-        nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
-        nt_gyroYaw.setDouble(getYaw());
-        nt_gyroPitch.setDouble(getPitch());
-        nt_gyroRoll.setDouble(getRoll());
-        nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
-        nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
+        if (debugMode) {
+            nt_leftVelocity.setDouble(getLeftVelocity());
+            nt_rightVelocity.setDouble(getRightVelocity());
+            nt_leftDistance.setDouble(getLeftDistance());
+            nt_rightDistance.setDouble(getRightDistance());
+            nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
+            nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
+            nt_gyroYaw.setDouble(getYaw());
+            nt_gyroPitch.setDouble(getPitch());
+            nt_gyroRoll.setDouble(getRoll());
+            nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
+            nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
+        }
         
     }
 

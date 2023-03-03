@@ -25,7 +25,7 @@ public class MidConeAuto extends SequentialCommandGroup {
                 PathPlannerTrajectory trajectory) {
         super(
             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-            new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout),
+            new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
             Commands.waitSeconds(0.5),
             new ClawMovement(sys_claw, kClaw.openPosition),
