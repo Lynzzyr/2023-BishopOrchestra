@@ -244,7 +244,7 @@ public final class Constants {
         public static final int kMotor2ID                       = 33;
         public static final int kEncoderChannel                 = 4;
 
-        public final static double kVoltageLimit                = 7.2; //60% speed
+        public final static double kVoltageLimit                = 6; //50% speed
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.01;
         public final static double kg                           = 0.4;
@@ -263,7 +263,7 @@ public final class Constants {
             public final static double kConeMid                 = 0.1;
             public final static double kConeAbove               = 0.13;
             public final static double kToMid                   = 0.05; //place low cube
-
+ 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
             
