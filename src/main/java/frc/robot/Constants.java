@@ -343,10 +343,14 @@ public final class Constants {
 
         public static final int kIntakeCurrentLimit             = 30;
 
+        public static final double kRollerInVolts               = 3.6;
+        public static final double kRollerReverseVolts          = -1;
+
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
                 public static final double kPivotExtended       = 0.36;
-                public static final double kPivotHugging        = 0.11;
+                public static final double kPivotHugging        = 0.17;
+                public static final double kPivotStoring        = 0.55;
                 public static final double kPivotTestA          = 0.13;
                 public static final double kPivotTestB          = 0.3;
             }

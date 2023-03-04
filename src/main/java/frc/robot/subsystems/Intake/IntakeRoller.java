@@ -17,7 +17,7 @@ public class IntakeRoller extends SubsystemBase
 {
   private final WPI_TalonFX motor;
 
-  boolean debugMode = false;
+  boolean debugMode = true;
   private ShuffleboardTab tab_intake;
   private GenericEntry rollerSpeed;
 
