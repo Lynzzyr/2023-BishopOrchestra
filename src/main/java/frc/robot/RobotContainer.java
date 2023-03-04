@@ -341,6 +341,16 @@ public class RobotContainer
                 )
             )
         );
+
+        joystickSecondary.start()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kbalancing, 
+                    kTelescope.kDestinations.kRetracted
+                )
+            );
     }
 
     
