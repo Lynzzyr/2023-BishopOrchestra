@@ -165,13 +165,19 @@ public final class Constants {
             = "TURN LEFT place and balance";
         public static final String TURN_RIGHT_PLACE_AND_BALANCE
             = "TURN RIGHT place and balance";
-        public static final String PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE
-            = "Place and leave community no balance";
+        public static final String PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place side and leave community no balance";
+        public static final String PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place centre and TURN RIGHT leave community no balance";
+        public static final String PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place centre and TURN LEFT leave community no balance";
 
         public static final String[] paths = new String[] {
             TURN_LEFT_PLACE_AND_BALANCE,
             TURN_RIGHT_PLACE_AND_BALANCE,
-            PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE};
+            PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE,
+            PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE,
+            PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE};
     }
 
     public static final class kBalancing {
