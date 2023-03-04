@@ -342,7 +342,7 @@ public class RobotContainer
             )
         );
 
-        joystickSecondary.start()
+        joystickSecondary.back()
             .onTrue(
                 new ArmToPos(
                     sys_telescope, 
@@ -351,7 +351,7 @@ public class RobotContainer
                     kTelescope.kDestinations.kRetracted
                 )
             );
-        joystickSecondary.back()
+        joystickSecondary.start()
             .onTrue(
                 new ArmToPos(
                     sys_telescope, 
