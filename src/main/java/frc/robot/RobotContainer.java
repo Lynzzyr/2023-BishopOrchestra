@@ -241,7 +241,7 @@ public class RobotContainer
         //     // .whileTrue(cmd_pivotManualDown);
 
         joystickMain.povDown()
-            .whileTrue(
+            .onTrue(
                 new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
                 .andThen(Commands.waitSeconds(0.5))
                 .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
@@ -263,13 +263,11 @@ public class RobotContainer
             )
             
             .onFalse(
-                new RollerMove(sys_intakeRoller, 0)
-                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff))
+                new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
                 .andThen(Commands.waitSeconds(0.5))
                 .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
-                .andThen(Commands.runOnce(() -> sys_intakePivot.disable()))
-                .andThen(Commands.runOnce(() -> sys_intakeWrist.disable())
-            ));
+                .andThen(Commands.waitSeconds(1))
+            );
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
