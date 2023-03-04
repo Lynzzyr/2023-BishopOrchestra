@@ -268,7 +268,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.34; // placeholder
-            public final static double kbalancing               = 0.595;
+            public final static double kBalancing               = 0.595;
         }
 
     }

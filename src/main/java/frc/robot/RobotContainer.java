@@ -347,10 +347,20 @@ public class RobotContainer
                 new ArmToPos(
                     sys_telescope, 
                     sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kbalancing, 
+                    kArmSubsystem.kSetpoints.kBalancing, 
                     kTelescope.kDestinations.kRetracted
                 )
             );
+        joystickSecondary.back()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kToLoadingRamp, 
+                    kTelescope.kDestinations.kRetracted
+                )
+            );
+               
     }
 
     
