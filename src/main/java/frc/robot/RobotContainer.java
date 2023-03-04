@@ -241,28 +241,35 @@ public class RobotContainer
         //     // .whileTrue(cmd_pivotManualDown);
 
         joystickMain.povDown()
-            .whileTrue(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-            .andThen(Commands.waitSeconds(0.5))
-            .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-            .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerInVolts)))
+            .whileTrue(
+                new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
+                .andThen(Commands.waitSeconds(0.5))
+                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
+                .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerInVolts))
+            )
 
-            .onFalse(new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
-            .andThen(Commands.waitSeconds(0.5))
-            .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotHugging)));
+            .onFalse(
+                new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
+                .andThen(Commands.waitSeconds(0.5))
+                .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotHugging))
+        );
         
         joystickMain.povRight()
-            .whileTrue(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-            .andThen(Commands.waitSeconds(0.5))
-            .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-            .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerReverseVolts)));
-        
-        joystickMain.povUp()
-            .whileTrue(new RollerMove(sys_intakeRoller, 0)
-            .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff))
-            .andThen(Commands.waitSeconds(0.5))
-            .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
-            .andThen(Commands.runOnce(() -> sys_intakePivot.disable()))
-            .andThen(Commands.runOnce(() -> sys_intakeWrist.disable())));
+            .onTrue(
+                new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
+                .andThen(Commands.waitSeconds(0.5))
+                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
+                .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerReverseVolts))
+            )
+            
+            .onFalse(
+                new RollerMove(sys_intakeRoller, 0)
+                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff))
+                .andThen(Commands.waitSeconds(0.5))
+                .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
+                .andThen(Commands.runOnce(() -> sys_intakePivot.disable()))
+                .andThen(Commands.runOnce(() -> sys_intakeWrist.disable())
+            ));
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
