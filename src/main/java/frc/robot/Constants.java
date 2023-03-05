@@ -248,7 +248,7 @@ public final class Constants {
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.01;
         public final static double kg                           = 0.4;
-        public final static double knintydegreepos              = -0.042;
+        public final static double knintydegreepos              = 0; // old setpoint = -0.042
 
         public static class kPID {
             public static final double kP                       = 50;
@@ -259,9 +259,9 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0.55;
 
-            public final static double kToTop                   = 0.095; //place high cube and low cones
-            public final static double kConeMid                 = 0.1;
-            public final static double kConeAbove               = 0.13;
+            public final static double kToTop                   = 0.095; //place high cubes button y
+            public final static double kConeMid                 = 0.1;   // place low mid cones button x
+            public final static double kConeAbove               = 0.13;  // place high mid cones button b
             public final static double kToMid                   = 0.05; //place low cube
  
             public final static double kToGroundFront           = 0.0; //placeholder
