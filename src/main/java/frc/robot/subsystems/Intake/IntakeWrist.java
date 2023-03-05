@@ -22,7 +22,7 @@ public class IntakeWrist extends PIDSubsystem
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  boolean debugMode = true;
+  boolean debugMode = false;
   private ShuffleboardTab tab_intake;
   private GenericEntry kP, kI, kD, encPos;
 
