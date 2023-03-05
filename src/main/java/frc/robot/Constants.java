@@ -245,7 +245,7 @@ public final class Constants {
         public static final int kEncoderChannel                 = 4;
 
         public final static double kVoltageLimit                = 6; //50% speed
-        public final static double kVoltageManual               = 3;
+        public final static double kVoltageManual               = 2;
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.001;
         public final static double kg                           = 0.4;
@@ -260,9 +260,9 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0.55;
 
-            public final static double kToTop                   = 0.083; // 44 inches extended, old setpoint: 0.095
-            public final static double kConeMid                 = 0.012; // 35.5 inches to the gripper, old setpoint: 0.1
-            public final static double kConeAbove               = 0.042;  // 41 inches, old setpoint: 0.13 
+            public final static double kToTop                   = 0.032; // 44 inches extended, old setpoint: 0.095
+            public final static double kConeMid                 = 0.042; // 35.5 inches to the gripper, old setpoint: 0.1
+            public final static double kConeAbove               = 0.072;  // 41 inches, old setpoint: 0.13 
             public final static double kToMid                   = -0.018; // 30 inches, old setpoint: 0.05 
  
             public final static double kToGroundFront           = 0.0; //placeholder
