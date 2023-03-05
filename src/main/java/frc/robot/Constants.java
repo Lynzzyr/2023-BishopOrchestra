@@ -260,10 +260,11 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0.55;
 
-            public final static double kToTop                   = 0.032; // 44 inches extended, old setpoint: 0.095
-            public final static double kConeMid                 = 0.042; // 35.5 inches to the gripper, old setpoint: 0.1
-            public final static double kConeAbove               = 0.072;  // 41 inches, old setpoint: 0.13 
-            public final static double kToMid                   = -0.018; // 30 inches, old setpoint: 0.05 
+            public final static double kToTop                   = -0.135; // 44 inches extended, old setpoint: 0.095
+            public final static double kConeMid                 = -0.144; // 35.5 inches to the gripper, old setpoint: 0.1
+            public final static double kConeAbove               = -0.1
+            ;  // 41 inches, old setpoint: 0.13 
+            public final static double kToMid                   = -0.204; // 30 inches, old setpoint: 0.05 
  
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
@@ -271,14 +272,15 @@ public final class Constants {
             public final static double kToLoadingRamp           = 0.48; //placeholder
             public final static double kToLoadingIntake         = 0.43;
 
-            public final static double kToLoadingshoulder       = 0.02; // 37.5 inches from the bottom of the beaver screws, old setpoint: 0.11
+            public final static double kToLoadingshoulder       = -0.13; // 37.5 inches from the bottom of the beaver screws, old setpoint: 0.11
             public final static double kToHandoff               = 0.0; //placeholder
 
-            public final static double kIdling                  = 0.336; // old 0.34
-            public final static double kBalancing               = 0.575; // old 0.595 
+            public final static double kIdling                  = 0.166; // old 0.34
+            public final static double kBalancing               = 0.4; // old 0.595 
 
             // setpoint of hardstop of shoulder side of robot: -0.118
-        }
+            // it is off by 0.17 - 0.186
+        } 
 
     }
 
