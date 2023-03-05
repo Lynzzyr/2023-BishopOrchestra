@@ -32,6 +32,7 @@ import frc.robot.commands.ClawMovement;
 import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
+import frc.robot.commands.MoveArmManual;
 import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
@@ -341,6 +342,12 @@ public class RobotContainer
                     kTelescope.kDestinations.kRetracted
                 )
             );
+
+        joystickSecondary.povRight()
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
+
+        joystickSecondary.povLeft()
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual));
 
         // joystickMain.b()
         //     .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command

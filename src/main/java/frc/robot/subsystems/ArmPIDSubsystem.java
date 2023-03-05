@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
+import frc.robot.commands.DisablePIDSubsystems;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class ArmPIDSubsystem extends PIDSubsystem {
@@ -125,6 +126,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   public void setPrevPos(double prevPos) {
     this.prevPos = prevPos;
+  }
+
+  public void moveVolts(double volts) {
+    m_motor1.setVoltage(volts);
   }
 
 
