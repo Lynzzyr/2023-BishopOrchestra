@@ -271,7 +271,7 @@ public final class Constants {
             public final static double kToLoadingRamp           = 0.48; //placeholder
             public final static double kToLoadingIntake         = 0.43;
 
-            public final static double kToLoadingshoulder       = -0.13; // 38.5 inches from the bottom of the beaver screws, old setpoint: 0.11
+            public final static double kToLoadingshoulder       = -0.13; // 38.5 inches, old setpoint: 0.11
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.166; // 48.5 inches, old setpoint 0.34
