@@ -127,6 +127,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     this.prevPos = prevPos;
   }
 
+
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
