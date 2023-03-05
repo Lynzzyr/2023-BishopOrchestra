@@ -24,12 +24,11 @@ public class MidConeAuto extends SequentialCommandGroup {
                 NewClaw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
-            new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
             new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
-            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
-            Commands.waitSeconds(0.5),
-            new ClawMovement(sys_claw, kClaw.openPosition),
-            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake).withTimeout(1),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid).withTimeout(1),
+            new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(1),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake).withTimeout(0.1),
+            Commands.waitSeconds(1),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
         );
