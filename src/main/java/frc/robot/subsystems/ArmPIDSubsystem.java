@@ -26,7 +26,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   private double prevPos;
 
-  private final boolean debug = true;
+  private final boolean debug = false;
 
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
@@ -117,7 +117,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   
   public double getAngle(){
-    return getMeasurement()*360;
+    return (getMeasurement()*360) + 75;
   }
 
   public double getPrevPos() {
