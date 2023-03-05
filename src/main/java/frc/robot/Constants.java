@@ -264,7 +264,7 @@ public final class Constants {
             public final static double kConeMid                 = -0.144; // 35.5 inches to the gripper, old setpoint: 0.1
             public final static double kConeAbove               = -0.1
             ;  // 41 inches, old setpoint: 0.13 
-            public final static double kToMid                   = -0.204; // 30 inches, old setpoint: 0.05 
+            public final static double kToMid                   = -0.18; // 30 inches, old setpoint: 0.05 
  
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
