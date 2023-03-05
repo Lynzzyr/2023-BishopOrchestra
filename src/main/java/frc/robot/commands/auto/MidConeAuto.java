@@ -29,7 +29,7 @@ public class MidConeAuto extends SequentialCommandGroup {
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
             Commands.waitSeconds(0.5),
             new ClawMovement(sys_claw, kClaw.openPosition),
-            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake).withTimeout(1),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
         );
