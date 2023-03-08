@@ -26,7 +26,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   private double prevPos;
 
-  private final boolean debug = false;
+  private final boolean debug = true;
 
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
@@ -83,16 +83,16 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     double ecd_value = m_encoder.getAbsolutePosition(); 
     rawPosition.setDouble(ecd_value);
 
-     if (ecd_value > 0.7){  // used to fix encoder values, the greatest value before the values start again
+     if (ecd_value < 0.4){  // used to fix encoder values, the greatest value before the values start again
       if (debug){
-        absolutePosition.setDouble(ecd_value - 1 + Constants.kArmSubsystem.knintydegreepos);
+        absolutePosition.setDouble(ecd_value + 1 );
       }
-      return ecd_value -1 + Constants.kArmSubsystem.knintydegreepos;
+      return ecd_value +1;
     }else{
       if (debug){
-      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos); // nintydresspos is the value of the encoder when angle is 0
+      absolutePosition.setDouble(ecd_value); // nintydresspos is the value of the encoder when angle is 0
       }
-      return ecd_value + Constants.kArmSubsystem.knintydegreepos;
+      return ecd_value;
     }
     // Return the process variable measurement here 
   }
@@ -117,7 +117,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   
   public double getAngle(){
-    return (getMeasurement()*360) + 75;
+    return (getMeasurement()*360) - 397;
   }
 
   public double getPrevPos() {
