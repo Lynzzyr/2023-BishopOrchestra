@@ -84,8 +84,8 @@ public final class Constants {
         }
 
         public static final class kDriveteam {
-            public static final double rampRate                 = 0.3;
-            public static final double stopRamp                 = 0.6;
+            public static final double rampRate                 = 0.0;
+            public static final double stopRamp                 = 0.0;
 
             public static final double defaultSpeedMultiplier   = 0.8;
             public static final double defaultTurningMultiplier = 0.8;
@@ -111,6 +111,11 @@ public final class Constants {
                 kDefault,
                 kBoost
             }
+        }
+
+        public static final class kSlew {
+            public static final double kForwardSlew             = 2.2;
+            public static final double kSidewaysSlew            = 3.5;
         }
     }
 

@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.kDrivetrain.kSlew;
 import frc.robot.subsystems.Drivetrain;
 
 public class DefaultDrive extends CommandBase {
 
     private final Drivetrain m_drivetrain;
     private final CommandXboxController m_controller;
+    private final SlewRateLimiter m_forwardSlewLimiter;
+    private final SlewRateLimiter m_sidewaysSlewLimiter;
 
     /**
      * Default drive command
@@ -26,6 +30,9 @@ public class DefaultDrive extends CommandBase {
 
         m_drivetrain = drivetrain;
         m_controller = controller;
+
+        m_forwardSlewLimiter = new SlewRateLimiter(kSlew.kForwardSlew);
+        m_sidewaysSlewLimiter = new SlewRateLimiter(kSlew.kSidewaysSlew);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +41,8 @@ public class DefaultDrive extends CommandBase {
         double xSpeed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         double zRotation = -m_controller.getLeftX();
 
-        m_drivetrain.arcadeDrive(xSpeed, zRotation);
+        m_drivetrain.arcadeDrive(m_forwardSlewLimiter.calculate(xSpeed),
+                                m_sidewaysSlewLimiter.calculate(zRotation));
     }
 
     // Returns true when the command should end.
