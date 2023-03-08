@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
@@ -25,6 +27,7 @@ import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.ClawMovement;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
@@ -201,10 +204,20 @@ public class RobotContainer
         //         () -> sys_claw.getState() == kClawState.kOpen)
         //     );
         joystickMain.x()
-            .onTrue(new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout));
+            .whileTrue(
+                new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+            )
+            .onFalse(
+                new InstantCommand(() -> sys_claw.disable())
+            );
 
         joystickMain.y()
-            .onTrue(new ClawMovement(sys_claw, kClaw.cubeClosePosition).withTimeout(kClaw.timeout));
+            .onTrue(
+                new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold)
+            )
+            .onFalse(
+                new InstantCommand(() -> sys_claw.disable())
+            );
 
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
@@ -385,7 +398,7 @@ public class RobotContainer
                     kArmSubsystem.kSetpoints.kToLoadingRamp
                 )
             );
-               
+                   
     }
 
     
