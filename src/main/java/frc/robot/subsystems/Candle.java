@@ -313,8 +313,9 @@ public class Candle extends SubsystemBase {
      */
 
 
-    public void inGameAnimation() {
-      setAnimation(AnimationTypes.ColorFlow, kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
+     public void inGameAnimation() {
+      // setAnimation(AnimationTypes.ColorFlow, kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
+      setAnimation(AnimationTypes.Static, kCANdle.kColors.cone[0], kCANdle.kColors.cone[1], kCANdle.kColors.cone[2]);
     }
 
 
