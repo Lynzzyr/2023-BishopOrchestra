@@ -5,10 +5,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.Constants.kTelescope;
-
-import frc.robot.commands.ArmRotation;
-import frc.robot.commands.TelescopeTo;
-
+import frc.robot.commands.arm.ArmRotation;
+import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Telescope;
 

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
-import frc.robot.commands.DisablePIDSubsystems;
+import frc.robot.commands.disabled.DisablePIDSubsystems;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class ArmPIDSubsystem extends PIDSubsystem {

@@ -2,48 +2,45 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmPIDSubsystem;
 
-public class MoveArmManual extends CommandBase {
+public class ArmRotation extends CommandBase {
   private final ArmPIDSubsystem sys_arm;
-  private double m_voltage;
-  /** Creates a new MoveArmManual. */
-  public MoveArmManual(ArmPIDSubsystem armPIDSubsystem, double voltage) {
+  private double setpoint;
+
+
+  /** Creates a new ArmRotation2. */
+  public ArmRotation(ArmPIDSubsystem armPIDSubsystem, double setpoint) {
     sys_arm = armPIDSubsystem;
-    this.m_voltage = voltage;
+    this.setpoint = setpoint;
 
     addRequirements(sys_arm);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_arm.disable();
-
+    sys_arm.setSetpoint(setpoint);
+    sys_arm.enable();
+  
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    sys_arm.moveVolts(m_voltage);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    double newSetpoint = sys_arm.getMeasurement();
-    sys_arm.setSetpoint(newSetpoint);
-    sys_arm.enable();
-
+//    sys_arm.disable();
+    sys_arm.setPrevPos(setpoint);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return sys_arm.getController().atSetpoint();
   }
 }

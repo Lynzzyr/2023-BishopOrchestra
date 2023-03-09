@@ -138,7 +138,7 @@ public final class Constants {
         public static final double cubeClosePosition             = 0.585;
 
         public static final int coneDistanceThreshold            = 180;
-        public static final int cubeDistanceThreshold            = 70;
+        public static final int cubeDistanceThreshold            = 60;
         
         public static final int stallTime                        = 40;
 
@@ -283,11 +283,10 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.22; // old 1.2 
+            public final static double kBalancing               = 1.21; // old 1.2 
 
-            // setpoint of hardstop of shoulder side of robot: -0.118
+            // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate
-            // setpoints are off by 0.01 from absolute position
         } 
 
     }
@@ -330,7 +329,7 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
-            public static final double kGroundBack              = 0.0; // placeholder
+            public static final double kGroundBack              = 11.95; 
             
             public static final double kLoading                 = 0.0; // placeholder
 
