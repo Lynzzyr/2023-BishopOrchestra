@@ -305,7 +305,7 @@ public class Candle extends SubsystemBase {
       } else if (currentAnimationSlot == 6) {
         //End Game
         animationTime++;
-        if (animationTime % 4 != 3) {
+        if (animationTime % 5 < 3) {
           setColor(kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
         } else {
           setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
@@ -395,7 +395,7 @@ public class Candle extends SubsystemBase {
     }
 
     public void endGame() {
-      setAnimation(AnimationTypes.EndGame, 255, 255, 255);
+      setAnimation(AnimationTypes.EndGame, 0, 0, 0);
     }
 
 }

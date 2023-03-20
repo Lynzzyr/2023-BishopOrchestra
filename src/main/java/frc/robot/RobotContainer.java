@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -28,7 +30,8 @@ import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
-import frc.robot.Constants.kTrajectoryPath;
+import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
+import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.MoveThenExtend;
 import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.DefaultDrive;
@@ -42,7 +45,8 @@ import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.commands.auto.MidConeAuto;
+import frc.robot.commands.auto.OneConeAuto;
+import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -102,9 +106,8 @@ public class RobotContainer
     private final GearShift cmd_highSpeed;
 
     // Trajectory & autonomous path chooser
-    private PathPlannerTrajectory[] m_paths = new PathPlannerTrajectory[kTrajectoryPath.paths.length];
     private ShuffleboardTab sb_driveteam;
-    private SendableChooser<PathPlannerTrajectory> sc_choosePath;
+    private SendableChooser<Command> sc_chooseAutoRoutine;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -134,19 +137,22 @@ public class RobotContainer
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
 
         // Trajectory & autonomous path chooser
-        PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
-
-        for (int i = 0; i < m_paths.length; i++) {
-            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints, true);
-        }
 
         sb_driveteam = Shuffleboard.getTab("Drive Team");
-        sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
-        sc_choosePath.setDefaultOption(kTrajectoryPath.paths[0], m_paths[0]);
-        for (int i = 0; i < m_paths.length; i++) {
-            sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
+        sc_chooseAutoRoutine = new SendableChooser<Command>();
+
+        for (String pathName : kOneConeAuto.all) {
+            PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
-        sb_driveteam.add("Auto path", sc_choosePath)
+        for (String pathName : kOneConeOnePickup.all) {
+            List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, pathGroup);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+
+        sb_driveteam.add("Choose auto routine", sc_chooseAutoRoutine)
             .withSize(3, 1);
         
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
@@ -358,15 +364,13 @@ public class RobotContainer
 
         sys_armPIDSubsystem.disable();
 
-        PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
-
+        Command chosenAutoRoutine = sc_chooseAutoRoutine.getSelected();
 
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
-        // Reset odometry
-        sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
+
         // Run auto path, then stop and re-set ramp rate
-        return new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
+        return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }

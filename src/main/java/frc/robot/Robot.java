@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
     m_robotContainer.sys_telescope.setNeutralMode(IdleMode.kBrake);
 
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

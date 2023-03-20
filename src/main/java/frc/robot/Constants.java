@@ -168,24 +168,39 @@ public final class Constants {
         public static final AxisDirection mountPoseUp           = AxisDirection.PositiveZ;
     }
 
-    public static final class kTrajectoryPath {
-        public static final String TURN_LEFT_PLACE_AND_BALANCE
-            = "TURN LEFT place and balance";
-        public static final String TURN_RIGHT_PLACE_AND_BALANCE
-            = "TURN RIGHT place and balance";
-        public static final String PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE
-            = "Place side and leave community no balance";
-        public static final String PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE
-            = "Place centre and TURN RIGHT leave community no balance";
-        public static final String PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE
-            = "Place centre and TURN LEFT leave community no balance";
+    /**
+     * Refer to auto routines diagram document:
+     * https://docs.google.com/document/d/1pk5vwyWT9BPNdzbD-7wMtg9T3llIuKD4-a5t5yMFHZo/edit?usp=sharing
+     */
+    public static final class kAutoRoutines {
+        
+        public static final class kOneConeAuto {
+            public static final String TURN_LEFT_place_and_balance = "TURN LEFT place and balance";
+            public static final String TURN_RIGHT_place_and_balance = "TURN RIGHT place and balance";
 
-        public static final String[] paths = new String[] {
-            TURN_LEFT_PLACE_AND_BALANCE,
-            TURN_RIGHT_PLACE_AND_BALANCE,
-            PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE,
-            PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE,
-            PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE};
+            public static final String PLACE_SIDE_and_leave_community_no_balance = "PLACE SIDE and leave community, no balance";
+
+            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "PLACE CENTRE, turn LEFT and leave community, no balance";
+            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "PLACE CENTRE, turn RIGHT and leave community, no balance";
+
+            public static final String[] all = {
+                TURN_LEFT_place_and_balance,
+                TURN_RIGHT_place_and_balance,
+                PLACE_SIDE_and_leave_community_no_balance,
+                PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
+                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
+            };
+        }
+
+        public static final class kOneConeOnePickup {
+            public static final String TURN_LEFT_place_pickup_balance = "TURN LEFT place, pickup, balance";
+            public static final String TURN_RIGHT_place_pickup_balance = "TURN RIGHT place, pickup, balance";
+
+            public static final String[] all = {
+                TURN_LEFT_place_pickup_balance,
+                TURN_RIGHT_place_pickup_balance
+            };
+        }
     }
 
     public static final class kBalancing {
@@ -286,6 +301,7 @@ public final class Constants {
 
             public final static double kIdling                  = 0.96; // 48.5 inches
             public final static double kBalancing               = 1.21; // old 1.2 
+            public final static double kAutoDrivingWithCone     = 1.20;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate
