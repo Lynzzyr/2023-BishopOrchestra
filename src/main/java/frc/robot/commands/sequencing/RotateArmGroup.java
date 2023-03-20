@@ -1,9 +1,6 @@
 package frc.robot.commands.sequencing;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
@@ -28,5 +25,7 @@ public class RotateArmGroup extends ParallelCommandGroup{
                 kTelescope.kDestinations.kRetracted
             )
         );
+
+        addRequirements(sys_arm, sys_telescope);
     }
 }

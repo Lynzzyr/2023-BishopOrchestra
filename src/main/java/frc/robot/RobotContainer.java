@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,20 +18,22 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
+import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.MoveThenExtend;
 import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
+import frc.robot.commands.MoveAndRetract;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
@@ -195,7 +198,7 @@ public class RobotContainer
                 Commands.either(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
@@ -208,7 +211,7 @@ public class RobotContainer
                 Commands.either(
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
@@ -263,71 +266,47 @@ public class RobotContainer
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
         joystickSecondary.y()
-        .onTrue(
-            new ArmToTopCube(
-                sys_armPIDSubsystem, 
-                sys_telescope
-            )
-        );
+            .onTrue(
+                new MoveThenExtend(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop, 
+                sys_telescope, Constants.kTelescope.kDestinations.kExtended)
+            );
                 
         joystickSecondary.x()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kConeMid
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeMid, sys_telescope)
+                
             );
 
         joystickSecondary.b()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kConeAbove
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAbove, sys_telescope)
             );
 
         joystickSecondary.a()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kToMid
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
             );
 
         joystickSecondary.rightBumper()
             .onTrue(
-                new ArmToSubstation(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+                .andThen(new ClawMovement(sys_claw, kClaw.openPosition))
             ); // pickup from loading station
             
-            joystickSecondary.leftBumper()
+        joystickSecondary.leftBumper()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kIdling
-                    )
-                );
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
+            );
                     
-            joystickSecondary.back()
-                .onTrue(
-                    new RotateArmGroup(
-                        sys_telescope, 
-                        sys_armPIDSubsystem, 
-                        kArmSubsystem.kSetpoints.kBalancing
-                    )
-                );
+        joystickSecondary.back()
+            .onTrue(
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kBalancing, sys_telescope)
+            );
                 
-            joystickSecondary.start()
-                .onTrue(
-                    new RotateArmGroup(
-                        sys_telescope, 
-                        sys_armPIDSubsystem, 
-                        kArmSubsystem.kSetpoints.kToLoadingRamp
-                    )
-                );
+        joystickSecondary.start()
+                 .onTrue(
+                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingRamp, sys_telescope)
+            );
                     
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
@@ -356,14 +335,6 @@ public class RobotContainer
             )
         );
 
-        joystickSecondary.back()
-            .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kBalancing
-                )
-            );
         joystickSecondary.start()
             .onTrue(
                 new RotateArmGroup(

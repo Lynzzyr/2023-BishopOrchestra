@@ -35,5 +35,7 @@ public class ArmToSubstation extends ParallelCommandGroup {
       new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
       new ClawMovement(sys_claw, kClaw.openPosition)
     );
+
+    addRequirements(sys_arm, sys_claw, sys_telescope);
   }
 }

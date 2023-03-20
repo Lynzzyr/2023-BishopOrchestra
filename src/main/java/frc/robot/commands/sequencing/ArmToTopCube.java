@@ -43,6 +43,7 @@ public class ArmToTopCube extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+
         extended = false;
         sys_arm.setPrevPos(kArmSubsystem.kSetpoints.kToTop);
         sys_telescope.setPrevPos(kTelescope.kDestinations.kExtended);
@@ -51,7 +52,6 @@ public class ArmToTopCube extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        
         return Math.abs(sys_telescope.getDistance() - kTelescope.kDestinations.kExtended) < 0.2;
     }
 
