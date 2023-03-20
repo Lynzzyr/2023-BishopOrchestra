@@ -243,7 +243,9 @@ public final class Constants {
             //custom
             SinWave,
             SinFlow,
-            ChargedUp
+            ChargedUp,
+            EStopped,
+            EndGame
         }
     }
 

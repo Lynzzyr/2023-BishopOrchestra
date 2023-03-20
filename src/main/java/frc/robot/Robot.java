@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,6 +26,10 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private int LEDState = 0;
+
+  private Alliance currentAlliance; 
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -36,6 +41,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    LEDState = 0;
+
+    currentAlliance = DriverStation.getAlliance();
+
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
       .negate()
@@ -43,7 +52,6 @@ public class Robot extends TimedRobot {
       .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_telescope))
       .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem, m_robotContainer.sys_claw));
 
-    
   }
 
   /**
@@ -65,25 +73,46 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    LEDState++;
     m_robotContainer.sys_claw.disable();
-    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
-      m_robotContainer.sys_candle.idleAnimation();
+    // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+    //   m_robotContainer.sys_candle.idleAnimation();
+    // }
+    if (!DriverStation.isEStopped()) {
+      if (LEDState == 2) {
+        m_robotContainer.sys_candle.chargedUp();
+      } else if (LEDState == 0 || LEDState == 1) {
+        m_robotContainer.sys_candle.idleAnimation();
+      } else if (LEDState == 3) {
+        m_robotContainer.sys_candle.endGame();
+      }
+    } else {
+      m_robotContainer.sys_candle.EStopped();
     }
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (LEDState == 1) {
+      Alliance alliance = DriverStation.getAlliance();
+      if (alliance != currentAlliance) {
+        m_robotContainer.sys_candle.idleAnimation();
+        currentAlliance = alliance;
+      }
+    }
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    LEDState = 1;
     m_robotContainer.sys_candle.inGameAnimation();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
     m_robotContainer.sys_telescope.setNeutralMode(IdleMode.kBrake);
 
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -94,9 +123,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (DriverStation.getMatchTime() <= 0.1) {
-      m_robotContainer.sys_candle.chargedUp();
-    }
+    // if (DriverStation.getMatchTime() <= 0.1) {
+    //   m_robotContainer.sys_candle.chargedUp();
+    // }
   }
 
   @Override
@@ -115,5 +144,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+  }
+
+  public void setToIdle() {
+    LEDState = 1;
   }
 }
