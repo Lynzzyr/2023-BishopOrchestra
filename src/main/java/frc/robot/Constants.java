@@ -175,13 +175,13 @@ public final class Constants {
     public static final class kAutoRoutines {
         
         public static final class kOneConeAuto {
-            public static final String TURN_LEFT_place_and_balance = "TURN LEFT place and balance";
-            public static final String TURN_RIGHT_place_and_balance = "TURN RIGHT place and balance";
+            public static final String TURN_LEFT_place_and_balance = "3L. TURN LEFT place and balance";
+            public static final String TURN_RIGHT_place_and_balance = "3R. TURN RIGHT place and balance";
 
-            public static final String PLACE_SIDE_and_leave_community_no_balance = "PLACE SIDE and leave community, no balance";
+            public static final String PLACE_SIDE_and_leave_community_no_balance = "4. PLACE SIDE and leave community, no balance";
 
-            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "PLACE CENTRE, turn LEFT and leave community, no balance";
-            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "PLACE CENTRE, turn RIGHT and leave community, no balance";
+            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "5L. PLACE CENTRE, turn LEFT and leave community, no balance";
+            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "5R. PLACE CENTRE, turn RIGHT and leave community, no balance";
 
             public static final String[] all = {
                 TURN_LEFT_place_and_balance,
@@ -193,10 +193,10 @@ public final class Constants {
         }
 
         public static final class kOneConeOnePickup {
-            public static final String TURN_LEFT_place_pickup_balance = "TURN LEFT place, pickup, balance";
-            public static final String TURN_RIGHT_place_pickup_balance = "TURN RIGHT place, pickup, balance";
+            public static final String TURN_LEFT_place_pickup_balance = "1L. TURN LEFT place, pickup, balance";
+            public static final String TURN_RIGHT_place_pickup_balance = "1R. TURN RIGHT place, pickup, balance";
 
-            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "PLACE CENTRE, drive centre, pickup centre, balance";
+            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "2. PLACE CENTRE, drive centre, pickup centre, balance";
 
             public static final String[] all = {
                 TURN_LEFT_place_pickup_balance,
