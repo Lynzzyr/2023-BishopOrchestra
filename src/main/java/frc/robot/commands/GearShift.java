@@ -1,19 +1,17 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.subsystems.Drivetrain;
 
-public class GearShift extends CommandBase {
+public class GearShift extends InstantCommand {
 
     private final double forwardSpeed;
     private final double turningSpeed;
 
     private final Drivetrain m_drivetrain;
     private final GearState m_gearState;
-
-    private int timer;
 
     /**
      * Code gear shifting to increase, decrease speed
@@ -52,32 +50,12 @@ public class GearShift extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        //sets the speed and ramprate
+        //sets the speed
         m_drivetrain.setSpeed(forwardSpeed, turningSpeed);
-        m_drivetrain.rampRate(kDriveteam.kChangeRamp);
-        timer = 0;
-    }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-        //counts down then turns the ramp rate down
-        timer++;
-        if (timer == kDriveteam.timerLength) {
-            m_drivetrain.rampRate(kDriveteam.rampRate);
-        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {
-        m_drivetrain.rampRate(kDriveteam.rampRate);
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return timer >= kDriveteam.timerLength;
-    }
+    public void end(boolean interrupted) {}
 
 }

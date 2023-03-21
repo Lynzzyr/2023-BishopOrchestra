@@ -275,6 +275,7 @@ public class RobotContainer {
         // Manual telescope movement
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+            
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
@@ -352,6 +353,15 @@ public class RobotContainer {
                 )
             )
         );
+
+        // joystickSecondary.start()
+        //     .onTrue(
+        //         new RotateArmGroup(
+        //             sys_telescope, 
+        //             sys_armPIDSubsystem, 
+        //             kArmSubsystem.kSetpoints.kToLoadingRamp
+        //         )
+        //     );
                    
     }
 

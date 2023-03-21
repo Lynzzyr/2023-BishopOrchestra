@@ -85,26 +85,15 @@ public final class Constants {
 
         public static final class kDriveteam {
             public static final double rampRate                 = 0.0;
-            public static final double stopRamp                 = 0.0;
 
-            public static final double defaultSpeedMultiplier   = 0.8;
+            public static final double defaultSpeedMultiplier   = 0.85;
             public static final double defaultTurningMultiplier = 0.8;
                 
             public static final double slowSpeed                = 0.5;
             public static final double slowTurn                 = 0.6;
 
             public static final double boostSpeed               = 1;
-            public static final double boostTurningSpeed        = 1;
-                
-            public static final double kChangeRamp              = 0.5;
-            public static final int timerLength                 = 50;
-
-            public static final double maxSpinSpeed             = 3;
-            public static final double lowerSpinSpeed           = 0.7;
-            public static final double spinRamp                 = 1;
-            public static final int lowerTimer                  = 10;
-
-            public static final double rumbleIntensity          = 1;
+            public static final double boostTurningSpeed        = 0.8;
 
             public static enum GearState {
                 kSlow,
@@ -115,7 +104,7 @@ public final class Constants {
 
         public static final class kSlew {
             public static final double kForwardSlew             = 2.2;
-            public static final double kSidewaysSlew            = 3.5;
+            public static final double kSidewaysSlew            = 3.4;
         }
     }
 
@@ -289,7 +278,7 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0;
 
-            public final static double kToTop                   = 0.665; // 41.75 inches
+            public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
@@ -304,7 +293,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.21; // old 1.2 
+            public final static double kBalancing               = 1.215; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.20;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
