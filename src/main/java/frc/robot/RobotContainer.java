@@ -69,8 +69,7 @@ import frc.robot.subsystems.Intake.IntakeWrist;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer
-{
+public class RobotContainer {
 
     // Driver controllers
     private final CommandXboxController joystickMain;
@@ -123,21 +122,44 @@ public class RobotContainer
         sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
-
-        // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        
         sys_claw = new NewClaw();
         sys_candle = new Candle();
         sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
+        // sys_limelight = new Limelight(joystickMain);
+
+        // Sequential commands
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);        
+        cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
+        cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
+        cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
+        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
+        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
+        // cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
+        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
+        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
+        // Set default drive as drivetrain's default command
+        sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
+
+        // Add auto routines to Shuffleboard
+        addAutoRoutinesToShuffleboard();
+
+        // Configure the trigger bindings
+        configureBindings();
+    }
+
+    /**
+     * Add the auto routines selection to Shuffleboard.
+     * 
+     * This MUST be called in the RobotContainer constructor.
+     */
+    private void addAutoRoutinesToShuffleboard() {
         // Trajectory & autonomous path chooser
-
         sb_driveteam = Shuffleboard.getTab("Select auto");
         sc_chooseAutoRoutine = new SendableChooser<Command>();
 
@@ -154,22 +176,6 @@ public class RobotContainer
 
         sb_driveteam.add("Choose auto routine", sc_chooseAutoRoutine)
             .withSize(3, 1);
-        
-        cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
-        cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
-        cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
-        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
-        // sys_limelight = new Limelight(joystickMain);
-        // cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
-        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
-        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
-
-        // Set default drive as drivetrain's default command
-        sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
-
-        // Configure the trigger bindings
-        configureBindings();
     }
 
     /**
