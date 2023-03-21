@@ -9,6 +9,8 @@
 
 [Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
+[Auto routines diagram](./src/main/java/frc/robot/commands/auto/doc/Auto%20Routines%20Diagram.pdf)
+
 ## Libraries 
 [LimelightHelpers](https://github.com/LimelightVision/limelightlib-wpijava)
 
