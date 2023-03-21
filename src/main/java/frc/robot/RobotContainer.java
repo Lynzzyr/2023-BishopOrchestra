@@ -138,7 +138,7 @@ public class RobotContainer
 
         // Trajectory & autonomous path chooser
 
-        sb_driveteam = Shuffleboard.getTab("Drive Team");
+        sb_driveteam = Shuffleboard.getTab("Select auto");
         sc_chooseAutoRoutine = new SendableChooser<Command>();
 
         for (String pathName : kOneConeAuto.all) {
