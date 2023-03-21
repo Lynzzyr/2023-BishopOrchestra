@@ -213,6 +213,10 @@ public class Drivetrain extends SubsystemBase {
             zRotation * turningSpeed);
     }
 
+    public void autoTurnDrive(double xSpeed, double zRotation) {
+        m_diffDrive.arcadeDrive(xSpeed, zRotation);
+    }
+
     /**
      * Tank drive voltages, for trajectory
      * @param leftVolts

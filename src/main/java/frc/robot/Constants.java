@@ -102,6 +102,11 @@ public final class Constants {
             }
         }
 
+        public static final double kRotateP                     = 0;
+        public static final double kRotateI                     = 0;
+        public static final double kRotateD                     = 0;
+
+
         public static final class kSlew {
             public static final double kForwardSlew             = 2.2;
             public static final double kSidewaysSlew            = 3.4;
@@ -110,17 +115,17 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                        = 29;
+        public static final int clawCANID                       = 29;
 
-        public static final int dutyCycleChannel                 = 3;
+        public static final int dutyCycleChannel                = 3;
 
-        public static final int ToFCANID                         = 36;
+        public static final int ToFCANID                        = 36;
 
-        public static final int currentLimit                     = 20;
+        public static final int currentLimit                    = 20;
 
-        public static final double outputLimit                   = 3;
+        public static final double outputLimit                  = 3;
 
-        public static final double timeout                       = 2;
+        public static final double timeout                      = 2;
 
         public static final double openPosition                  = 0.77;
         public static final double coneClosePosition             = 0.545;
@@ -129,19 +134,19 @@ public final class Constants {
         public static final int coneDistanceThreshold            = 180;
         public static final int cubeDistanceThreshold            = 60;
         
-        public static final int stallTime                        = 40;
+        public static final int stallTime                       = 40;
 
-        public static final double encoderTolerance              = 0.01;
+        public static final double encoderTolerance             = 0.01;
 
-        public static final double kP                            = 20;
-        public static final double kI                            = 0;
-        public static final double kD                            = 0;
-        public static final double kF                            = 0;
+        public static final double kP                           = 20;
+        public static final double kI                           = 0;
+        public static final double kD                           = 0;
+        public static final double kF                           = 0;
 
         //distance from the claw to the object in front of it
-        public static final double objectRange                   = 150;
+        public static final double objectRange                  = 150;
 
-        public static final int dutyCycleRatio                   = 111538;
+        public static final int dutyCycleRatio                  = 111538;
 
         public static enum kClawState {
             kOpen,
@@ -392,14 +397,28 @@ public final class Constants {
     }
 
     public static class kLimelight {
-        public static final int heightOffFloor                  = 15; //cm
-        public static final int angle                           = 0; //degrees
+        public static final double heightOffFloor               = 45.72; //cm
+        public static final int angle                           = 11; //degrees
         public static final int kAutoLightTimeout               = 1000; //ms
-        public static final boolean kDoAutoLight                = true; 
-        public static final double KretroTargetFF               = 0.3;
-        public static final double KretroTargetTolerance        = 0.1;
-        public static final double kALTriggerDistance           = 1; //placeholder
-        public static final double disconnectNotifLength        = 200; //rumble time in seconds
-        public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
+        public static final boolean kDoAutoLight                = false; 
+        public static final double kALTriggerDistance           = 1; //PLACEHOLDER
+        
+        public static final class limeLightAlert {
+            public static final double disconnectNotifLength        = 200; //rumble time in ms
+            public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
+        }
+
+        public static final class KretroTarget {
+            public static final boolean retroDistanceDebug      = false; 
+            public static final double lowNodeHeight            = 60.14; //cm
+        }
+
+        public static class kConeNodeAim {
+            public static final double KretroTargetFF               = 0.265;
+            public static final double KretroTargetTolerance        = 0.025;
+            public static final double kP                       = 0.01; //.22
+            public static final double kI                       = 0;
+            public static final double kD                       = 0;
+        }
     }
 }

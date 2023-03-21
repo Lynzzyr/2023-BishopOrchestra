@@ -26,56 +26,59 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class Limelight extends SubsystemBase {
-    // networktables
+    // Networktables
     NetworkTable limelightTable;
+    NetworkTableEntry nt_xOffset, nt_yOffset, nt_targetArea, nt_visibility, nt_ledMode, nt_crop;
 
-    // shuffleboard
-    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget;
+    // Shuffleboard
+    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget;
+    private final ShuffleboardTab sb_limelight;
+    private final GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
     private final GenericEntry xWidget, yWidget, zWidget;
     private final GenericEntry rxWidget, ryWidget, rzWidget;
     private final GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
-    private final GenericEntry targetSizeWidget;
+    private final GenericEntry targetSizeWidget; 
+    private final GenericEntry retroDistanceWidget; 
 
-    // robot
+    // Fiducial
     private double targetDistance;
     private double[] robotPos;
 
-    // time
+    // Time
     private double lastLightUpdate;
-    
     private double[] positionDefaults = new double[] { 0 };
-
-    // Important NetworkTable values
-    NetworkTableEntry nt_xOffset, nt_yOffset, nt_targetArea, nt_visibility, nt_ledMode, nt_crop;
-
-    // Important variables
-    double angleToTarget;
-    double lowTargetDist, highTargetDist;
-    double turningDir = 0;
-
-    double  lastTick =  0;
 
     // Joystick for Retro-reflective
     private final CommandXboxController c_joystick;
-    private final XboxController joystickMain = new XboxController(0); //temp port
+    private final XboxController joystickMain = new XboxController(0); //temp port;
 
-    // Shuffleboard Tab and Entries
-    private ShuffleboardTab sb_limelight;
-    private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
-
+    // Retro reflective targetting
+    private double retroTargetDistance;
+    private double lastRetroDistance; //DEBUGGING
+    double angleToTarget;
+    double turningDir = 0;
 
     public Limelight(CommandXboxController joystick) {
-        // networktables
+        // Networktables
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
         NetworkTableInstance.getDefault().startServer();
         NetworkTableInstance.getDefault().setServerTeam(5409);
 
-        // shuffleboard
+        // Shuffleboard
         Shuffleboard.getTab("Field Localization").add("Position", 0);
         Shuffleboard.getTab("Field Localization").add("Rotation", 0);
         Shuffleboard.getTab("Field Localization").add("Pipeline Info", 0);
         Shuffleboard.getTab("Field Localization").add("Target Size", 0);
+        Shuffleboard.getTab("Field Localization").add("Retro Distance", 0);
 
+        // Polling retro-reflective data
+        nt_xOffset =  limelightTable.getEntry("tx"); //possibly move to lime light helpers.
+        nt_yOffset =  limelightTable.getEntry("ty");
+        nt_targetArea =  limelightTable.getEntry("ta");
+        nt_visibility =  limelightTable.getEntry("tv");
+        nt_ledMode =  limelightTable.getEntry("ledMode");
+
+            // Robot pos
         localizationPos = Shuffleboard.getTab("Field Localization")
                 .getLayout("Position", BuiltInLayouts.kGrid)
                 .withSize(1, 2);
@@ -84,6 +87,7 @@ public class Limelight extends SubsystemBase {
         yWidget = localizationPos.add("Y", 0).getEntry();
         zWidget = localizationPos.add("Z", 0).getEntry();
 
+            // Robot rotation
         localizationRot = Shuffleboard.getTab("Field Localization")
                 .getLayout("Rotation", BuiltInLayouts.kGrid)
                 .withSize(1, 2);
@@ -92,53 +96,53 @@ public class Limelight extends SubsystemBase {
         ryWidget = localizationRot.add("rY", 0).getEntry();
         rzWidget = localizationRot.add("rZ", 0).getEntry();
 
+            // Pipeline index
         localizationPipeline = Shuffleboard.getTab("Field Localization")
                 .getLayout("Pipeline Info", BuiltInLayouts.kGrid)
                 .withSize(1, 2);
 
+            pipelineIndexWidget = localizationPipeline.add("Pipeline", 0).getEntry();
+            pipelineLatencyWidget = localizationPipeline.add("Latency", 0).getEntry();
+        
+            // Retro target size
         localizationTarget = Shuffleboard.getTab("Field Localization")
-                .getLayout("Pipeline Info", BuiltInLayouts.kGrid)
+                .getLayout("Target Size", BuiltInLayouts.kGrid)
                 .withSize(1, 1);
-
-        pipelineIndexWidget = localizationPipeline.add("Pipeline", 0).getEntry();
-        pipelineLatencyWidget = localizationPipeline.add("Latency", 0).getEntry();
+        
         targetSizeWidget = localizationTarget.add("Size", 0).getEntry();
 
-        // setting startup millis
-        lastLightUpdate = System.currentTimeMillis();
+            // Retro target Distance
+        retroTarget = Shuffleboard.getTab("Field Localization")
+            .getLayout("Retro Distance", BuiltInLayouts.kGrid)
+            .withSize(1, 1);
 
-        // {Retroreflective tape} Getting data from NetworkTables
-        nt_xOffset =  limelightTable.getEntry("tx");
-        nt_yOffset =  limelightTable.getEntry("ty");
-        nt_targetArea =  limelightTable.getEntry("ta");
-        nt_visibility =  limelightTable.getEntry("tv");
-        nt_ledMode =  limelightTable.getEntry("ledMode");
-        // nt_crop =  limelightTable.getEntry("crop");
+        retroDistanceWidget = retroTarget.add("Distance", 0).getEntry();
 
-        // {Retroreflective tape} Shuffleboard stuff
+        // Old shuffleboard retro-targetting data - TO BE MERGED WITH EXISTING
         sb_limelight = Shuffleboard.getTab("LimelightR");
-
         xOffEntry = sb_limelight.add("X Offset", nt_xOffset.getDouble(0)).getEntry();
         yOffEntry = sb_limelight.add("Y Offset", nt_yOffset.getDouble(0)).getEntry();
         targetAreaEntry = sb_limelight.add("Target Area", nt_targetArea.getDouble(-1)).getEntry();
         visibilityEntry = sb_limelight.add("Target Visibility", isVisible()).getEntry();
         ledModeEntry = sb_limelight.add("LED Mode", nt_ledMode.getDouble(-1)).getEntry();
-        // cropEntry = sb_limelight.add("Crop", nt_crop.getDoubleArray(new double[] {2, 2, 2, 2})).getEntry();
 
-        c_joystick = new CommandXboxController(0);
+        //joystick
+        c_joystick = new CommandXboxController(0); // To be removed
+        
+        //startup time
+        lastLightUpdate = System.currentTimeMillis(); // setting startup millis
     }
 
     public void updateRobotPosition() {
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
 
         // get the position of the robot in 3d fieldspace as calculated by fiducial
-        // targets
         robotPos = NetworkTableInstance.getDefault()
                 .getTable("limelight")
                 .getEntry("botpose")
                 .getDoubleArray(positionDefaults); // TEMPORARY
 
-        // updating target size data to shuffleboard
+        // updating target size data to shuffleboards
         targetDistance = LimelightHelpers.getTA("");
         targetSizeWidget.setDouble(LimelightHelpers.getTA(""));
 
@@ -162,6 +166,7 @@ public class Limelight extends SubsystemBase {
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
+    
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
         //System.out.println(System.currentTimeMillis() - lastLightUpdate);
@@ -174,6 +179,8 @@ public class Limelight extends SubsystemBase {
             }
         }
     }
+
+    /*--------------------------------------------------------------------------------------*/
     
     // Retroreflective tape-related code
     /** Turns the limelight off */
@@ -221,16 +228,41 @@ public class Limelight extends SubsystemBase {
         return  limelightTable.getEntry(key).getDouble(0);
     }
 
-    public void setCropSize(double[] cropSize){
+    public void setCropSize(double[] cropSize) {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
     }
 
     public void dynamicCrop(char targetType, double[] targetPos){
         ;    
     }
+
+    public void updateRetroDistance() {
+        double cameraTargetAngle = LimelightHelpers.getTY("");
+        double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
+        double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
+        
+        if (cameraTargetAngle != 0){ //prone to error if retro is direectly in line
+            retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.heightOffFloor)/Math.tan(realTargetAngleRadians); 
+        } else  { 
+            retroTargetDistance = 0;
+            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                System.out.println("No-RetroTarget");
+            }
+        }
+
+        //Pushing readings to shuffleboard
+        if (retroTargetDistance != lastRetroDistance){
+            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                System.out.printf("[Update] Retro-Distance:");
+            }
+            retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
+        }
+        lastRetroDistance = retroTargetDistance;
+    }
     
     @Override
     public void periodic() {
         updateRobotPosition();
+        updateRetroDistance();
     }
 }
