@@ -196,9 +196,13 @@ public final class Constants {
             public static final String TURN_LEFT_place_pickup_balance = "TURN LEFT place, pickup, balance";
             public static final String TURN_RIGHT_place_pickup_balance = "TURN RIGHT place, pickup, balance";
 
+            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "PLACE CENTRE, drive centre, pickup centre, balance";
+
             public static final String[] all = {
                 TURN_LEFT_place_pickup_balance,
-                TURN_RIGHT_place_pickup_balance
+                TURN_RIGHT_place_pickup_balance,
+
+                PLACE_CENTRE_drive_centre_pickup_centre_balance
             };
         }
     }
