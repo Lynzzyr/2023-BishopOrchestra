@@ -310,7 +310,7 @@ public class Candle extends SubsystemBase {
         } else {
           setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
         }
-        if (animationTime >= 180) {
+        if (animationTime >= 150) {
           idleAnimation();
         }
       }
