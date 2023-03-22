@@ -127,12 +127,12 @@ public final class Constants {
 
         public static final double timeout                      = 2;
 
-        public static final double openPosition                  = 0.77;
-        public static final double coneClosePosition             = 0.545;
-        public static final double cubeClosePosition             = 0.585;
+        public static final double openPosition                 = 0.77;
+        public static final double coneClosePosition            = 0.545;
+        public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold            = 180;
-        public static final int cubeDistanceThreshold            = 60;
+        public static final int coneDistanceThreshold           = 180;
+        public static final int cubeDistanceThreshold           = 60;
         
         public static final int stallTime                       = 40;
 
@@ -412,8 +412,8 @@ public final class Constants {
         public static final double kALTriggerDistance           = 1; //PLACEHOLDER
         
         public static final class limeLightAlert {
-            public static final double disconnectNotifLength        = 200; //rumble time in ms
-            public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
+            public static final double disconnectNotifLength    = 200; //rumble time in ms
+            public static final double limelightTimeout         = 500; //limelight disconnect timeout time in ms 
         }
 
         public static final class KretroTarget {
@@ -422,8 +422,8 @@ public final class Constants {
         }
 
         public static class kConeNodeAim {
-            public static final double KretroTargetFF               = 0.265;
-            public static final double KretroTargetTolerance        = 0.025;
+            public static final double KretroTargetFF           = 0.265;
+            public static final double KretroTargetTolerance    = 0.025;
             public static final double kP                       = 0.01; //.22
             public static final double kI                       = 0;
             public static final double kD                       = 0;
