@@ -235,9 +235,12 @@ public class RobotContainer {
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
         
         // Gear shifting (low-mid)
+        // joystickMain.leftBumper()
+        //     .onTrue(cmd_lowSpeed)
+        //     .onFalse(cmd_midSpeed);
+
         joystickMain.leftBumper()
-            .onTrue(cmd_lowSpeed)
-            .onFalse(cmd_midSpeed);
+            .whileTrue(cmd_coneNodeAim);
 
         // Gear shifting (high-mid)
         joystickMain.rightBumper()
@@ -274,8 +277,8 @@ public class RobotContainer {
         //         .andThen(Commands.waitSeconds(1))
         //     );
 
-        joystickMain.b()
-            .whileTrue(cmd_coneNodeAim);
+        // joystickMain.b()
+        //     .whileTrue(cmd_coneNodeAim);
 
         /*--------------------------------------------------------------------------------------*/
 
