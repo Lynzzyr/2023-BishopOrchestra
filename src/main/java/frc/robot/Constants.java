@@ -167,6 +167,26 @@ public final class Constants {
      * https://docs.google.com/document/d/1pk5vwyWT9BPNdzbD-7wMtg9T3llIuKD4-a5t5yMFHZo/edit?usp=sharing
      */
     public static final class kAutoRoutines {
+
+        public static final class kOneConeOnePickup {
+            public static final String TURN_LEFT_place_pickup_balance = "1L. TURN LEFT place, pickup, balance";
+            public static final String TURN_RIGHT_place_pickup_balance = "1R. TURN RIGHT place, pickup, balance";
+
+            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "2. PLACE CENTRE, drive centre, pickup centre, balance";
+
+            public static final String TURN_LEFT_place_pickup_no_balance = "3L. TURN LEFT place, pickup, no balance";
+            public static final String TURN_RIGHT_place_pickup_no_balance = "3R. TURN RIGHT place, pickup, no balance";
+
+            public static final String[] all = {
+                TURN_LEFT_place_pickup_balance,
+                TURN_RIGHT_place_pickup_balance,
+
+                PLACE_CENTRE_drive_centre_pickup_centre_balance,
+
+                TURN_LEFT_place_pickup_no_balance,
+                TURN_RIGHT_place_pickup_no_balance
+            };
+        }
         
         public static final class kOneConeAuto {
             public static final String TURN_LEFT_place_and_balance = "4L. TURN LEFT place and balance";
@@ -183,20 +203,6 @@ public final class Constants {
                 PLACE_SIDE_and_leave_community_no_balance,
                 PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
                 PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
-            };
-        }
-
-        public static final class kOneConeOnePickup {
-            public static final String TURN_LEFT_place_pickup_balance = "1L. TURN LEFT place, pickup, balance";
-            public static final String TURN_RIGHT_place_pickup_balance = "1R. TURN RIGHT place, pickup, balance";
-
-            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "2. PLACE CENTRE, drive centre, pickup centre, balance";
-
-            public static final String[] all = {
-                TURN_LEFT_place_pickup_balance,
-                TURN_RIGHT_place_pickup_balance,
-
-                PLACE_CENTRE_drive_centre_pickup_centre_balance
             };
         }
     }
