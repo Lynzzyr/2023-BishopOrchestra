@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
@@ -352,7 +353,7 @@ public class RobotContainer {
                     kCANdle.kColors.cone[2],
                     LEDColorType.Cone
                 )
-            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
+            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
         );
 
         // Set LED to cube (purple)
@@ -365,7 +366,7 @@ public class RobotContainer {
                     kCANdle.kColors.cube[2],
                     LEDColorType.Cube
                 )
-            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
+            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
         );
 
         // joystickSecondary.start()
