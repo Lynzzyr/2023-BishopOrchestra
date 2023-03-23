@@ -10,7 +10,9 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 public class MoveArmManual extends CommandBase {
   private final ArmPIDSubsystem sys_arm;
   private double m_voltage;
+
   /** Creates a new MoveArmManual. */
+  
   public MoveArmManual(ArmPIDSubsystem armPIDSubsystem, double voltage) {
     sys_arm = armPIDSubsystem;
     this.m_voltage = voltage;
@@ -23,7 +25,6 @@ public class MoveArmManual extends CommandBase {
   @Override
   public void initialize() {
     sys_arm.disable();
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,7 +39,6 @@ public class MoveArmManual extends CommandBase {
     double newSetpoint = sys_arm.getMeasurement();
     sys_arm.setSetpoint(newSetpoint);
     sys_arm.enable();
-
   }
 
   // Returns true when the command should end.

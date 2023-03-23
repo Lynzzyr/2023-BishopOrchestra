@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -43,6 +44,7 @@ import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
+import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.OneConeAuto;
@@ -336,9 +338,9 @@ public class RobotContainer {
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual));             
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -347,9 +349,10 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cone[0],
                     kCANdle.kColors.cone[1],
-                    kCANdle.kColors.cone[2]
+                    kCANdle.kColors.cone[2],
+                    LEDColorType.Cone
                 )
-            )
+            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
         );
 
         // Set LED to cube (purple)
@@ -359,9 +362,10 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cube[0],
                     kCANdle.kColors.cube[1],
-                    kCANdle.kColors.cube[2]
+                    kCANdle.kColors.cube[2],
+                    LEDColorType.Cube
                 )
-            )
+            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
         );
 
         // joystickSecondary.start()

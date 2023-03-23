@@ -147,6 +147,7 @@ public class Robot extends TimedRobot {
   }
 
   public void setToIdle() {
-    LEDState = 1;
+    LEDState = 0;
+    m_robotContainer.sys_candle.idleAnimation();
   }
 }

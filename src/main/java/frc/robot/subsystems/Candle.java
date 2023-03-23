@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.Constants.kCANdle.kColors;
 
 public class Candle extends SubsystemBase {
@@ -30,6 +31,8 @@ public class Candle extends SubsystemBase {
 
     private int currentChargeLocation = 0;
     private int maxCharge = 0;
+
+    private LEDColorType currentColor;
 
 
     public Candle() {
@@ -78,6 +81,20 @@ public class Candle extends SubsystemBase {
      * @param r : 0 - 255
      * @param g : Green 0 - 255
      * @param b : Blue 0  - 255
+     * @param type the cube or cone type
+     */
+
+    public void setAnimation(AnimationTypes animationType, int r, int g, int b, LEDColorType type) {
+      currentColor = type;
+      setAnimation(animationType, r, g, b);
+    }
+
+    /**
+     * Sets the current animation playing and clears the LEDs
+     * @param animationType The animation you want to play
+     * @param r : 0 - 255
+     * @param g : Green 0 - 255
+     * @param b : Blue 0  - 255
      */
 
     public void setAnimation(AnimationTypes animationType, int r, int g, int b) {
@@ -86,14 +103,12 @@ public class Candle extends SubsystemBase {
         switch(animationType) {
             case Static:
               currentAnimationSlot = 0;
-              Timer.delay(0.1);
               setColor(r, g, b);
               break;
             case ColorFlow:
               currentAnimationSlot = 1;
               colorAnimation = new ColorFlowAnimation(r, g, b, 0, kCANdle.kColors.gameSpeed, kCANdle.kConfig.LEDCount, Direction.Forward);
               setColor(0, 0, 0);
-              Timer.delay(0.1);
               candle.animate(colorAnimation, currentAnimationSlot);
               break;
             case SinFlow:
@@ -339,6 +354,10 @@ public class Candle extends SubsystemBase {
 
     public int getCurrentAnimation() {
       return currentAnimationSlot;
+    }
+
+    public LEDColorType getLEDType() {
+      return currentColor;
     }
 
     /**
