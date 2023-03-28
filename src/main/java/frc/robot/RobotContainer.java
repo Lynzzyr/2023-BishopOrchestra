@@ -163,6 +163,9 @@ public class RobotContainer {
 
         // Camera
         sys_camera = CameraServer.startAutomaticCapture();
+        sb_driveteam.addCamera("Camera", sys_camera.getName())
+            .withSize(4, 3);
+
         // Configure the trigger bindings
         configureBindings();
     }
