@@ -48,6 +48,7 @@ import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
+import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.ClawMovement;
@@ -233,6 +234,16 @@ public class RobotContainer {
                 new InstantCommand(() -> sys_claw.disable())
             );
 
+        // Manual-Close claw for cone / cube
+        joystickMain.b()
+            .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
+            .onFalse(
+                new SequentialCommandGroup(
+                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                    )
+                );
+
         // Open claw
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
@@ -249,6 +260,18 @@ public class RobotContainer {
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
+
+        joystickMain.povUp()
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.2)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+
+        joystickMain.povDown()
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.2)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+        
+        // Tune balancing
+        // joystickMain.povDown()
+        //     .whileTrue(new BalancingChargeStation(sys_drivetrain));
 
         // Intake (to be removed) ------------------------------------------------------------
         // joystickMain.povDown()

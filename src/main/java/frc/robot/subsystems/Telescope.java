@@ -35,7 +35,7 @@ public class Telescope extends SubsystemBase {
     private static DigitalInput s_maxLimSwitch;
     private static DigitalInput s_minLimSwitch;
 
-    boolean debugMode = true;
+    boolean debugMode = false;
     private static HashMap<String, GenericEntry> shuffleboardFields; 
   
 

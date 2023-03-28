@@ -128,10 +128,10 @@ public final class Constants {
         public static final double timeout                      = 2;
 
         public static final double openPosition                 = 0.77;
-        public static final double coneClosePosition            = 0.545;
+        public static final double coneClosePosition            = 0.54;
         public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold           = 180;
+        public static final int coneDistanceThreshold           = 160;
         public static final int cubeDistanceThreshold           = 60;
         
         public static final int stallTime                       = 40;
@@ -212,7 +212,7 @@ public final class Constants {
         public static final double maxAngle                     = 33.25;
         public static final double angleTolerance               = 1.5;
 
-        public static final double kP                           = 0.0319;
+        public static final double kP                           = 0.0318; //0.0319 from newmarket
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
@@ -254,8 +254,8 @@ public final class Constants {
 
             public static final double gameSpeed                = 0.2;
 
-            public static final int blinkSpeed                   = 4;
-            public static final int blinkTime                    = 5;
+            public static final int blinkSpeed                   = 6;
+            public static final int blinkTime                    = 7;
             
         }
 
@@ -312,7 +312,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.215; // old 1.2 
+            public final static double kBalancing               = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
 
             // setpoint of hardstop of shoulder side of robot: 0.513

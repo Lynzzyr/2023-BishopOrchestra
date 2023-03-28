@@ -246,14 +246,14 @@ public class Limelight extends SubsystemBase {
         } else  { 
             retroTargetDistance = 0;
             if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                System.out.println("No-RetroTarget");
+                // System.out.println("No-RetroTarget");
             }
         }
 
         //Pushing readings to shuffleboard
         if (retroTargetDistance != lastRetroDistance){
             if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                System.out.printf("[Update] Retro-Distance:");
+                // System.out.printf("[Update] Retro-Distance:");
             }
             retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
         }
