@@ -10,6 +10,8 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -93,6 +95,7 @@ public class RobotContainer {
     public final IntakePivot sys_intakePivot;
     public final IntakeWrist sys_intakeWrist;
     public final IntakeRoller sys_intakeRoller;
+    private final UsbCamera sys_camera;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -155,8 +158,11 @@ public class RobotContainer {
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Add auto routines to Shuffleboard
+        sb_driveteam = Shuffleboard.getTab("Drive team");
         addAutoRoutinesToShuffleboard();
 
+        // Camera
+        sys_camera = CameraServer.startAutomaticCapture();
         // Configure the trigger bindings
         configureBindings();
     }
@@ -168,7 +174,6 @@ public class RobotContainer {
      */
     private void addAutoRoutinesToShuffleboard() {
         // Trajectory & autonomous path chooser
-        sb_driveteam = Shuffleboard.getTab("Select auto");
         sc_chooseAutoRoutine = new SendableChooser<Command>();
 
         for (String pathName : kOneConeAuto.all) {
