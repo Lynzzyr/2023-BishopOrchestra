@@ -17,8 +17,7 @@ public class AutoCloseClaw extends CommandBase {
         this.setpoint = setpoint;
         this.closeDistance = closeDistance;
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(m_claw);
-        
+        addRequirements(m_claw);   
     }
 
     // Called when the command is initially scheduled.
@@ -30,7 +29,11 @@ public class AutoCloseClaw extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_claw.rollingToFAvg() <= closeDistance) {
+        if (m_claw.rollingToFAvg(m_claw.getLeftToF()) <= closeDistance) {
+            m_claw.setSetpoint(setpoint);
+            m_claw.enable();
+            finished = true;
+        } else if (m_claw.rollingToFAvg(m_claw.getRightToF()) <= closeDistance) {
             m_claw.setSetpoint(setpoint);
             m_claw.enable();
             finished = true;

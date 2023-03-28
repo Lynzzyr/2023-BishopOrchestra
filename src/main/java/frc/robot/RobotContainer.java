@@ -38,7 +38,6 @@ import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.MoveThenExtend;
-import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.MoveAndRetract;
@@ -54,6 +53,7 @@ import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
+import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -258,7 +258,8 @@ public class RobotContainer {
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                )
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
@@ -305,11 +306,11 @@ public class RobotContainer {
             .onFalse(cmd_midSpeed);
 
         joystickMain.povUp()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.2)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
         joystickMain.povDown()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.2)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
         
         // Tune balancing
