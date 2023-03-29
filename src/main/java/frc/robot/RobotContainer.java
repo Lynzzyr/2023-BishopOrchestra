@@ -291,14 +291,20 @@ public class RobotContainer {
             );
 
         // Manual-Close claw for cone / cube
+        // joystickMain.b()
+        //     .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
+        //     .onFalse(
+        //         new SequentialCommandGroup(
+        //             new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+        //             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+        //             )
+        //         );
+        
+        // Open claw to armed position
         joystickMain.b()
-            .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
-            .onFalse(
-                new SequentialCommandGroup(
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
-                    )
-                );
+            .onTrue(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+            );
 
         // Open claw
         joystickMain.a()
