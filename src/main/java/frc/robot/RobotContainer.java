@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -254,11 +256,13 @@ public class RobotContainer {
         // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
-                Commands.either(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                .andThen(new ConditionalCommand(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                )
                 )
             )
             .onFalse(
@@ -269,10 +273,13 @@ public class RobotContainer {
         // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
-                Commands.either(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
+                .andThen(new ConditionalCommand(
                     new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kAutoBalancing)
+                )
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
@@ -298,6 +305,7 @@ public class RobotContainer {
         //     .onFalse(cmd_midSpeed);
 
         joystickMain.leftBumper()
+
             .whileTrue(cmd_coneNodeAim);
 
         // Gear shifting (high-mid)

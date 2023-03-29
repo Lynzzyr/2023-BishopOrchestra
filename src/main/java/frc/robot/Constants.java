@@ -127,11 +127,12 @@ public final class Constants {
 
         public static final double timeout                      = 2;
 
-        public static final double openPosition                 = 0.77;
+        public static final double openPosition                 = 0.77; // old 0.77
+        public static final double armedOpenPosition            = 0.67; // old 0.77
         public static final double coneClosePosition            = 0.54;
         public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold           = 200; // old 160
+        public static final int coneDistanceThreshold           = 195; // old 160
         public static final int cubeDistanceThreshold           = 60;
         
         public static final int stallTime                       = 40;
@@ -312,6 +313,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
+            public final static double kAutoBalancing           = 1.19; // old 1.2 
             public final static double kBalancing               = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
 
@@ -359,6 +361,7 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
+            public static final double kAutoGroundBack          = 11.25; 
             public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder
