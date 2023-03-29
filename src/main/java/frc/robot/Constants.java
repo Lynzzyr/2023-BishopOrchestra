@@ -313,8 +313,9 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kAutoBalancing           = 1.19; // old 1.2 
-            public final static double kBalancing               = 1.21; // old 1.2 
+            public final static double kGroundPickupCube        = 1.19; // old 1.2 
+            public final static double kGroundPickupCone        = 1.21; // old 1.2 
+            public final static double kAutoBalancing           = 1.2;
             public final static double kAutoDrivingWithCone     = 1.15;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
@@ -361,7 +362,7 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
-            public static final double kAutoGroundBack          = 11.25; 
+            public static final double kAutoGroundBack          = 11.95; 
             public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder

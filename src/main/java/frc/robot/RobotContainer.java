@@ -260,7 +260,7 @@ public class RobotContainer {
                 .andThen(new ConditionalCommand(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
                 )
                 )
@@ -276,9 +276,14 @@ public class RobotContainer {
                 new ClawMovement(sys_claw, kClaw.armedOpenPosition)
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
                 .andThen(new ConditionalCommand(
+                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCube, sys_telescope),
+                    new WaitCommand(0),
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                ))
+                .andThen(new ConditionalCommand(
                     new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kAutoBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCube)
                 )
             )
             .onFalse(
@@ -409,7 +414,7 @@ public class RobotContainer {
         // Move arm and retract to ground pickup (resting on intake) position
         joystickSecondary.back()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kBalancing, sys_telescope)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
                     
         // Manual arm movement
