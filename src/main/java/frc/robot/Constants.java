@@ -315,7 +315,6 @@ public final class Constants {
             public final static double kIdling                  = 0.96; // 48.5 inches
             public final static double kGroundPickupCube        = 1.19; // old 1.2 
             public final static double kGroundPickupCone        = 1.21; // old 1.2 
-            public final static double kAutoBalancing           = 1.2;
             public final static double kAutoDrivingWithCone     = 1.15;
 
             // setpoint of hardstop of shoulder side of robot: 0.513

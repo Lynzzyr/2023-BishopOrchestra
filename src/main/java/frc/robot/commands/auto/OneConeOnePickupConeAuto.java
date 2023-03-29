@@ -39,7 +39,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0))
                     .alongWith(
                         // Ready to grab cone
-                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack)
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
                 
                 new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
