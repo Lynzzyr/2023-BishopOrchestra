@@ -26,6 +26,9 @@ public final class Constants {
                                                           
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
+
+        public static final double timerRumbleIntensity         = 0.5;
+        public static final double clawRumbleIntensity          = 1;
     }
 
     public static final class kCANBus {
@@ -93,7 +96,7 @@ public final class Constants {
             public static final double slowTurn                 = 0.6;
 
             public static final double boostSpeed               = 1;
-            public static final double boostTurningSpeed        = 0.8;
+            public static final double boostTurningSpeed        = 0.7;
 
             public static enum GearState {
                 kSlow,
@@ -125,7 +128,7 @@ public final class Constants {
 
         public static final double outputLimit                  = 3;
 
-        public static final double timeout                      = 2;
+        public static final double timeout                      = 1.25;
 
         public static final double openPosition                 = 0.77; // old 0.77
         public static final double armedOpenPosition            = 0.67; // old 0.77
@@ -252,7 +255,7 @@ public final class Constants {
             public static final double gameSpeed                = 0.2;
 
             public static final int blinkSpeed                   = 6;
-            public static final int blinkTime                    = 7;
+            public static final int blinkTime                    = 10;
             
         }
 

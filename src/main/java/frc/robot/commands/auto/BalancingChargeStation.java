@@ -7,11 +7,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.kBalancing;
+import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 
 public class BalancingChargeStation extends PIDCommand {
 
     private final Drivetrain m_drivetrain;
+    private final Candle m_candle;
+
+    private boolean isBalanced = false;
 
     private static double kP = kBalancing.kP;
     private static double kI = kBalancing.kI;
@@ -22,7 +27,7 @@ public class BalancingChargeStation extends PIDCommand {
     private ShuffleboardTab sb_balancingTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
 
-    public BalancingChargeStation(Drivetrain drivetrain) {
+    public BalancingChargeStation(Drivetrain drivetrain, Candle candle) {
         super(
             new PIDController(kP, kI, kD),
             drivetrain::getPitch,
@@ -32,9 +37,10 @@ public class BalancingChargeStation extends PIDCommand {
         );
 
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(drivetrain);
+        addRequirements(drivetrain, candle);
 
         m_drivetrain = drivetrain;
+        m_candle = candle;
 
         // Add items to Shuffleboard
         if (debugMode) {
@@ -52,10 +58,27 @@ public class BalancingChargeStation extends PIDCommand {
     @Override
     public void initialize() {
         // Update PID values from Shuffleboard
+        m_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
         if (debugMode) {
             getController().setP(nt_kP.getDouble(0));
             getController().setI(nt_kI.getDouble(0));
             getController().setD(nt_kD.getDouble(0));
+        }
+    }
+
+    @Override
+    public void execute() {
+        super.execute();
+        if (getController().atSetpoint()) {
+            if (!isBalanced) {
+                m_candle.setAnimation(AnimationTypes.Static, 0, 255, 0);
+                isBalanced = true;
+            }
+        } else {
+            if (isBalanced) {
+                m_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
+                isBalanced = false;
+            }
         }
     }
 

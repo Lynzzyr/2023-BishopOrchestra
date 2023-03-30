@@ -12,16 +12,20 @@ public class BlinkLEDs extends CommandBase {
     private final int r;
     private final int g;
     private final int b;
+    private final int blinkSpeed;
+    private final int blinkCount;
 
     private LEDColorType currentType;
     private int timer;
 
-    public BlinkLEDs(Candle candle, int r, int g, int b) {
+    public BlinkLEDs(Candle candle, int r, int g, int b, int blinkSpeed, int blinkCount) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_candle = candle;
         this.r = r;
         this.g = g;
         this.b = b;
+        this.blinkSpeed = blinkSpeed;
+        this.blinkCount = blinkCount;
 
         addRequirements(m_candle);
         
@@ -38,7 +42,7 @@ public class BlinkLEDs extends CommandBase {
     @Override
     public void execute() {
         timer++;
-        if (timer % kCANdle.kColors.blinkSpeed < kCANdle.kColors.blinkSpeed / 2) {
+        if (timer % blinkSpeed < blinkSpeed / 2) {
           m_candle.setAnimation(AnimationTypes.Static, r, g, b);
         } else {
           switchToDefaultColor();
@@ -54,7 +58,7 @@ public class BlinkLEDs extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.floor(timer / kCANdle.kColors.blinkSpeed) >= kCANdle.kColors.blinkTime;
+        return Math.floor(timer / blinkSpeed) >= blinkCount && blinkCount != -1;
     }
 
     public void switchToDefaultColor() {

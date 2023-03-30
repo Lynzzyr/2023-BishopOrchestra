@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kClaw;
-import frc.robot.Constants.kClaw.kClawState;
 
 public class NewClaw extends PIDSubsystem {
   private final WPI_TalonFX clawMot;
@@ -28,9 +26,6 @@ public class NewClaw extends PIDSubsystem {
 
     private final TimeOfFlight s_tofLeft;
     private final TimeOfFlight s_tofRight;
-
-    private kClawState currentState = kClawState.kOpen;
-
 
     private ShuffleboardTab clawTab;
 

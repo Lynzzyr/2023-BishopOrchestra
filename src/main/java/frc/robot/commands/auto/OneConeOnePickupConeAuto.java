@@ -11,12 +11,15 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
+import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
@@ -28,6 +31,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,
             NewClaw sys_claw,
+            Candle sys_LEDs,
             List<PathPlannerTrajectory> pathGroup) {
 
         addCommands(
@@ -41,8 +45,9 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                         // Ready to grab cone
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
-                
-                new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                new BlinkLEDs(sys_LEDs, 255, 0, 0, kCANdle.kColors.blinkSpeed, 5).alongWith(
+                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)
+                ),
 
                 // Drive to charge station
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1))
@@ -52,7 +57,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                         new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
 
-                new BalancingChargeStation(sys_drivetrain)
+                new BalancingChargeStation(sys_drivetrain, sys_LEDs)
         );
     }
 }
