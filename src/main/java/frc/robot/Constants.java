@@ -126,8 +126,7 @@ public final class Constants {
 
         public static final int currentLimit                    = 20;
 
-        public static final double coneOutputLimit              = 3;
-        public static final double cubeOutputLimit              = 0.5;
+        public static final double outputLimit                  = 3;
 
         public static final double timeout                      = 1.25;
 
@@ -362,7 +361,6 @@ public final class Constants {
 
             public static final double kGroundFront             = 0.0; // placeholder
             public static final double kAutoGroundBack          = 11.95; 
-            public static final double kCubeGround              = 10;
             public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder

@@ -36,8 +36,6 @@ public class NewClaw extends PIDSubsystem {
     private final double[] lastToFValues = new double[5];
     private int indexCount;
   
-    private double outputLimit;
-
   /** Creates a new NewClaw. */
   public NewClaw() {
     super(new PIDController(Constants.kClaw.kP, Constants.kClaw.kI, Constants.kClaw.kD));
@@ -77,36 +75,29 @@ public class NewClaw extends PIDSubsystem {
 
     setPID(kClaw.kP, kClaw.kI, kClaw.kD);
 
-  }
-
-  public void setSpeed(double speed) {
-    clawMot.set(speed);
-  }
-
-  public void stopMotor() {
-    clawMot.set(0);
-  }
-
-  public void setPID(double p, double i, double d) {
-    m_controller.setP(p);
-    m_controller.setI(i);
-    m_controller.setD(d);
 }
 
-  public double getOutputLimit() {
-    return outputLimit;
-  }
+public void setSpeed(double speed) {
+  clawMot.set(speed);
+}
 
-  public void setOutputLimit(double newLimit) {
-    outputLimit = newLimit;
-  }
+public void stopMotor() {
+  clawMot.set(0);
+}
+
+public void setPID(double p, double i, double d) {
+  m_controller.setP(p);
+  m_controller.setI(i);
+  m_controller.setD(d);
+}
+
 
   @Override
   public void useOutput(double output, double setpoint) {
-    if (output >= outputLimit) {
-      output = outputLimit;
-    } else if (output <= -outputLimit) {
-      output = -outputLimit;
+    if (output >= kClaw.outputLimit) {
+      output = kClaw.outputLimit;
+    } else if (output <= -kClaw.outputLimit) {
+      output = -kClaw.outputLimit;
     }
     clawMot.setVoltage(output*12);
     // Use the output here

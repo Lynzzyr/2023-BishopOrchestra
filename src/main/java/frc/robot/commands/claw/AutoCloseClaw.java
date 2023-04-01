@@ -1,9 +1,6 @@
 package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.kCANBus;
-import frc.robot.Constants.kClaw;
-import frc.robot.Constants.kTelescope;
 import frc.robot.subsystems.NewClaw;
 
 public class AutoCloseClaw extends CommandBase {
@@ -15,14 +12,10 @@ public class AutoCloseClaw extends CommandBase {
     private boolean finished = false;
     private int closeDistance;
 
-    private boolean cubeOrCone;
-    private boolean groundPickup;
-
-    public AutoCloseClaw(NewClaw claw, double setpoint, int closeDistance, boolean groundPickup, boolean cubeOrCone) {
+    public AutoCloseClaw(NewClaw claw, double setpoint, int closeDistance) {
         m_claw = claw;
         this.setpoint = setpoint;
         this.closeDistance = closeDistance;
-        this.cubeOrCone = cubeOrCone;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_claw);   
     }
@@ -30,11 +23,6 @@ public class AutoCloseClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (cubeOrCone && groundPickup) {
-            m_claw.setOutputLimit(kClaw.cubeOutputLimit);
-        } else {
-            m_claw.setOutputLimit(kClaw.coneOutputLimit);
-        }
         finished = false;        
     }
 

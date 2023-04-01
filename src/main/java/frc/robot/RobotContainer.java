@@ -260,32 +260,42 @@ public class RobotContainer {
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.armedOpenPosition)
                 .andThen(new ConditionalCommand(
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack)
-                    .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, true, false)),
-                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, false, false), 
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                    new WaitCommand(0), 
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                )
                 )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable()).alongWith(new InstantCommand(() -> sys_claw.stopMotor()))
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
-
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
             );
 
         // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
-                new ClawMovement(sys_claw, kClaw.openPosition)
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround))
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
                 .andThen(new ConditionalCommand(
-                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, true, true),
-                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold, false, true), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
+                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCube, sys_telescope),
+                    new WaitCommand(0),
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                ))
+                .andThen(new ConditionalCommand(
+                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
+                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCube)
                 )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable()).alongWith(new InstantCommand(() -> sys_claw.stopMotor()))
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable())
+                )
             );
 
         // Manual-Close claw for cone / cube
