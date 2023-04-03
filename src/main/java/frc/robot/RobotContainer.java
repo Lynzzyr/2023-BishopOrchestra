@@ -350,7 +350,6 @@ public class RobotContainer {
         joystickSecondary.rightBumper()
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
-                .andThen(new ClawMovement(sys_claw, kClaw.openPosition))
             ); // pickup from loading station
             
         // Move arm and retract to idling position
