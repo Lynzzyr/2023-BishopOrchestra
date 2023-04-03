@@ -300,6 +300,7 @@ public final class Constants {
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
+            public final static double kConeAboveNew            = 0.64;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
@@ -361,6 +362,7 @@ public final class Constants {
 
             public static final double kGroundFront             = 0.0; // placeholder
             public static final double kAutoGroundBack          = 11.95; 
+            public static final double kCubeGround              = 10;
             public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder

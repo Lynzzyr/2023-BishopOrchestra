@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -23,7 +24,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
+import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kCANdle.LEDColorType;
@@ -31,9 +35,7 @@ import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
-import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
@@ -44,32 +46,26 @@ import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.RollerMove;
-import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
-import frc.robot.commands.sequencing.ArmToSubstation;
-import frc.robot.commands.sequencing.ArmToTopCube;
-import frc.robot.commands.sequencing.RotateArmGroup;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Limelight;
 
 
 /**
@@ -259,17 +255,17 @@ public class RobotContainer {
         joystickMain.x()
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.armedOpenPosition)
-                .andThen(new ConditionalCommand(
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
-                    new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                        new WaitCommand(0), 
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
                 )
-                )
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
                 new SequentialCommandGroup(
-                    new WaitCommand(kClaw.timeout),
                     new InstantCommand(() -> sys_claw.disable()),
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
@@ -278,35 +274,22 @@ public class RobotContainer {
         // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
-                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
-                .andThen(new ConditionalCommand(
-                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCube, sys_telescope),
-                    new WaitCommand(0),
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-                ))
-                .andThen(new ConditionalCommand(
-                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
-                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCube)
+                new ClawMovement(sys_claw, kClaw.openPosition)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
+                        .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
                 )
             )
             .onFalse(
                 new SequentialCommandGroup(
-                    new WaitCommand(kClaw.timeout),
-                    new InstantCommand(() -> sys_claw.disable())
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
             );
-
-        // Manual-Close claw for cone / cube
-        // joystickMain.b()
-        //     .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
-        //     .onFalse(
-        //         new SequentialCommandGroup(
-        //             new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
-        //             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
-        //             )
-        //         );
         
         // Open claw to armed position
         joystickMain.b()
@@ -317,11 +300,6 @@ public class RobotContainer {
         // Open claw
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
-        
-        // Gear shifting (low-mid)
-        // joystickMain.leftBumper()
-        //     .onTrue(cmd_lowSpeed)
-        //     .onFalse(cmd_midSpeed);
 
         joystickMain.leftBumper()
 
@@ -339,43 +317,6 @@ public class RobotContainer {
         joystickMain.povDown()
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
-        
-        // Tune balancing
-        // joystickMain.povDown()
-        //     .whileTrue(new BalancingChargeStation(sys_drivetrain));
-
-        // Intake (to be removed) ------------------------------------------------------------
-        // joystickMain.povDown()
-        //     .onTrue(
-        //         new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-        //         .andThen(Commands.waitSeconds(0.5))
-        //         .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-        //         .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerInVolts))
-        //     )
-
-        //     .onFalse(
-        //         new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
-        //         .andThen(Commands.waitSeconds(0.5))
-        //         .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotHugging))
-        // );
-        
-        // joystickMain.povRight()
-        //     .onTrue(
-        //         new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-        //         .andThen(Commands.waitSeconds(0.5))
-        //         .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-        //         .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerReverseVolts))
-        //     )
-            
-        //     .onFalse(
-        //         new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
-        //         .andThen(Commands.waitSeconds(0.5))
-        //         .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
-        //         .andThen(Commands.waitSeconds(1))
-        //     );
-
-        // joystickMain.b()
-        //     .whileTrue(cmd_coneNodeAim);
 
         /*--------------------------------------------------------------------------------------*/
 
@@ -392,18 +333,11 @@ public class RobotContainer {
                 new MoveThenExtend(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop, 
                 sys_telescope, Constants.kTelescope.kDestinations.kExtended)
             );
-                
-        // Move arm and retract ONTO mid cone node position
-        joystickSecondary.x()
-            .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeMid, sys_telescope)
-                
-            );
 
         // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAbove, sys_telescope)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
             );
 
         // Move arm and retract to mid cube position
