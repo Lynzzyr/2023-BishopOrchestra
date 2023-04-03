@@ -8,7 +8,10 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArmSubsystem;
@@ -37,6 +40,23 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
             Candle sys_LEDs,
             List<PathPlannerTrajectory> pathGroup) {
 
+
+        Command cmdLED = //blinks the LEDs
+            Commands.runOnce(
+                () -> sys_LEDs.setAnimation(
+                    AnimationTypes.Static,
+                    kCANdle.kColors.cone[0],
+                    kCANdle.kColors.cone[1],
+                    kCANdle.kColors.cone[2],
+                    LEDColorType.Cone
+                )
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_LEDs, 0, 255, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                )
+            );
+
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
@@ -48,23 +68,10 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                         // Ready to grab cone
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
-                //blinks the LEDs
-                Commands.runOnce(
-                    () -> sys_LEDs.setAnimation(
-                        AnimationTypes.Static,
-                        kCANdle.kColors.cone[0],
-                        kCANdle.kColors.cone[1],
-                        kCANdle.kColors.cone[2],
-                        LEDColorType.Cone
-                    )
-                ).alongWith(
-                    new SequentialCommandGroup(
-                        new WaitCommand(0.05),
-                        new BlinkLEDs(sys_LEDs, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                    )
-                //closes the claw
-                ).alongWith(
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)
+                    
+                new ParallelDeadlineGroup(
+                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                    cmdLED
                 ),
 
                 // Drive to charge station
