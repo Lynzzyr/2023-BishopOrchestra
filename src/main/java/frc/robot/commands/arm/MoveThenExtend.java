@@ -5,6 +5,7 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Telescope;
 
@@ -39,6 +40,7 @@ public class MoveThenExtend extends CommandBase {
   public void execute() {
   if (Math.abs(sys_arm.getMeasurement()-armSetpoint) < .1){
     sys_telescope.extend(telescopeSetpoint);
+    sys_telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
     extended = true;
 
   }
@@ -47,7 +49,8 @@ public class MoveThenExtend extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {  
+  }
 
   // Returns true when the command should end.
   @Override

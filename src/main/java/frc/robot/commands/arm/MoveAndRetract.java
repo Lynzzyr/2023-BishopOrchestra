@@ -28,6 +28,7 @@ public class MoveAndRetract extends CommandBase {
   @Override
   public void initialize() {
     sys_telescope.extend(Constants.kTelescope.kDestinations.kRetracted);
+    sys_telescope.setPrevPos(Constants.kTelescope.kDestinations.kRetracted);
     sys_arm.setSetpoint(armSetpoint);
     sys_arm.enable();
   
@@ -42,7 +43,8 @@ public class MoveAndRetract extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

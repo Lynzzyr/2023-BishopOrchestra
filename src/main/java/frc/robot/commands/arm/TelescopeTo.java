@@ -21,6 +21,7 @@ public class TelescopeTo extends CommandBase {
     @Override
     public void initialize() {
         sys_telescope.extend(setPoint);
+        sys_telescope.setPrevPos(setPoint);
 
     }
 

@@ -420,6 +420,7 @@ public final class Constants {
         public static final int kAutoLightTimeout               = 1000; //ms
         public static final boolean kDoAutoLight                = false; 
         public static final double kALTriggerDistance           = 1; //PLACEHOLDER
+        public static final boolean doShuffleboard              = false; 
         
         public static final class limeLightAlert {
             public static final double disconnectNotifLength    = 200; //rumble time in ms
@@ -429,14 +430,18 @@ public final class Constants {
         public static final class KretroTarget {
             public static final boolean retroDistanceDebug      = false; 
             public static final double lowNodeHeight            = 60.14; //cm
+            public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22};
+            public static final double[] highNodeCrop           = {-1, 1, 0.22, 1}; 
         }
 
         public static class kConeNodeAim {
             public static final double KretroTargetFF           = 0.265;
-            public static final double KretroTargetTolerance    = 0.025;
+            public static final double KretroTargetTolerance    = 0.02 ;
             public static final double kP                       = 0.01; //.22
-            public static final double kI                       = 0;
-            public static final double kD                       = 0;
+            public static final double kI                       = 0.0001;
+            public static final double kD                       = 0.0005;
+            public static final boolean doPIDTuning             = false; 
+            public static final boolean debugMode               = false;
         }
     }
 }

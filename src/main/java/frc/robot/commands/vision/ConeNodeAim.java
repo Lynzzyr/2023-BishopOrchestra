@@ -14,52 +14,65 @@ import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Telescope;
 
 public class ConeNodeAim extends CommandBase {
 
     private final Limelight sys_limelight;
     private final Drivetrain sys_drivetrain;
+    private final Telescope sys_Telescope;
     private final CommandXboxController m_joystick;
 
-    boolean debugMode = false; //---DO NOT ENABLE DURING COMP IT WILL MAKE THE ROBOT CRAAAASHHH---//
-
-    private ShuffleboardTab sb_coneNodeAim;
+    private ShuffleboardTab sb_nodeAimTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
 
     private final PIDController m_pidController;
 
     double xSpeed, dirInRad, turning, calculatedOutput;
+    double[] lowNodeCrop, highNodeCrop;
 
     /** Creates a new ConeNodeAim. */
-    public ConeNodeAim(Limelight limelight, Drivetrain drivetrain, CommandXboxController joystick) {
-
+    public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain, CommandXboxController joystick) {
         sys_limelight = limelight;
         sys_drivetrain = drivetrain;
+        sys_Telescope = telescope;
         m_joystick = joystick;
 
         m_pidController = new PIDController(kLimelight.kConeNodeAim.kP, kLimelight.kConeNodeAim.kI, kLimelight.kConeNodeAim.kD);
         m_pidController.setSetpoint(0);
         m_pidController.setTolerance(kLimelight.kConeNodeAim.KretroTargetTolerance);
 
-        // Use addRequirements() here to declare subsystem dependencies.
+        // Use addRequirements() here to declare subsysstem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
     }
 
+    public void setTargetMode(){
+        lowNodeCrop = kLimelight.KretroTarget.lowNodeCrop;
+        highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
+        if (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended) {
+            sys_limelight.setCropSize(highNodeCrop);
+            //add target mode
+        } else {
+            sys_limelight.setCropSize(lowNodeCrop);
+            //add targetMode
+        }
+    }
+
+    public void getShuffleboardPID(){
+        if (Constants.kLimelight.kConeNodeAim.doPIDTuning) {
+            sb_nodeAimTab = Shuffleboard.getTab("Field Localization");
+            nt_kP = sb_nodeAimTab.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
+            nt_kI = sb_nodeAimTab.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
+            nt_kD = sb_nodeAimTab.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
+            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
+        }
+    }
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        // sys_drivetrain.resetEncoders(); // IDK WHY
         sys_limelight.turnOn();
         sys_limelight.setData("pipeline", 0);
-        // System.out.println("Initialized");
-
-        if (debugMode) {
-            sb_coneNodeAim = Shuffleboard.getTab("Cone node aim");
-            nt_kP = sb_coneNodeAim.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
-            nt_kI = sb_coneNodeAim.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
-            nt_kD = sb_coneNodeAim.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
-            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
-        }
+        getShuffleboardPID();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -67,6 +80,7 @@ public class ConeNodeAim extends CommandBase {
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
         xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+        setTargetMode();
 
         //Applying feat forward and tolerance
         if (calculatedOutput >= Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
@@ -77,7 +91,7 @@ public class ConeNodeAim extends CommandBase {
 
         sys_drivetrain.autoTurnDrive(xSpeed, calculatedOutput);
 
-        if (debugMode){
+        if (Constants.kLimelight.kConeNodeAim.debugMode){
             System.out.println(calculatedOutput);
         }
 

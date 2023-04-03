@@ -151,7 +151,7 @@ public class RobotContainer {
         cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
-        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
