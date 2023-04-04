@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.List;
 import java.util.concurrent.locks.Condition;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -38,6 +40,7 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
+import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
@@ -52,9 +55,9 @@ import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
+import frc.robot.commands.auto.ConePlacePickupPlaceAuto;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
-import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
@@ -221,6 +224,11 @@ public class RobotContainer {
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
             OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+        for (String pathName : kConePlacePickupPlaceAuto.all) {
+            List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed+1, kAuto.kMaxAcceleration, true);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
@@ -443,7 +451,8 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate))
+            .andThen(() -> sys_drivetrain.setNeutralMode(NeutralMode.Brake));
     }
 
     public void rumbleController(double value, int time) {

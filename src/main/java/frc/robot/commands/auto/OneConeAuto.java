@@ -4,6 +4,9 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.auto.task.AutoPathPlanning;
+import frc.robot.commands.auto.task.BalancingChargeStation;
+import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;

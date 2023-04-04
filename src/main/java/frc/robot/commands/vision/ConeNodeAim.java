@@ -21,7 +21,7 @@ public class ConeNodeAim extends CommandBase {
     private final Limelight sys_limelight;
     private final Drivetrain sys_drivetrain;
     private final Telescope sys_Telescope;
-    private final CommandXboxController m_joystick;
+    private CommandXboxController m_joystick;
 
     private ShuffleboardTab sb_nodeAimTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
@@ -32,11 +32,11 @@ public class ConeNodeAim extends CommandBase {
     double[] lowNodeCrop, highNodeCrop;
 
     /** Creates a new ConeNodeAim. */
-    public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain, CommandXboxController joystick) {
+    public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain) {
         sys_limelight = limelight;
         sys_drivetrain = drivetrain;
         sys_Telescope = telescope;
-        m_joystick = joystick;
+        m_joystick = null;
 
         m_pidController = new PIDController(kLimelight.kConeNodeAim.kP, kLimelight.kConeNodeAim.kI, kLimelight.kConeNodeAim.kD);
         m_pidController.setSetpoint(0);
@@ -44,6 +44,12 @@ public class ConeNodeAim extends CommandBase {
 
         // Use addRequirements() here to declare subsysstem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
+    }
+
+    /** Creates a new ConeNodeAim. */
+    public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain, CommandXboxController joystick) {
+        this(limelight, telescope, drivetrain);
+        m_joystick = joystick;
     }
 
     public void setTargetMode(){
@@ -79,7 +85,9 @@ public class ConeNodeAim extends CommandBase {
     @Override
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
-        xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+        if (m_joystick != null)
+            xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+        else xSpeed = 0;
         setTargetMode();
 
         //Applying feat forward and tolerance

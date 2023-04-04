@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if (LEDState == 1) {
+    if (LEDState == 1 || LEDState == 0) {
       Alliance alliance = DriverStation.getAlliance();
       if (alliance != currentAlliance) {
         m_robotContainer.sys_candle.idleAnimation();
