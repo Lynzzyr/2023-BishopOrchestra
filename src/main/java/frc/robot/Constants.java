@@ -458,4 +458,9 @@ public final class Constants {
             public static final boolean debugMode               = false;
         }
     }
+
+    public static final class kStallDriveOnChargeStation {
+        public static final double kForwardSpeed = 0.345;
+        public static final double kBackwardSpeed = -0.34;
+    }
 }

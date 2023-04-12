@@ -44,6 +44,7 @@ import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
+import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.Drive.DefaultDrive;
 import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
@@ -334,6 +335,11 @@ public class RobotContainer {
         joystickMain.povDown()
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+
+        // Stall motors on charge station
+        joystickMain.start()
+            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
+            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
 
         /*--------------------------------------------------------------------------------------*/
 

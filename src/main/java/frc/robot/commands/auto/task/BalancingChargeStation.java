@@ -23,7 +23,7 @@ public class BalancingChargeStation extends PIDCommand {
     private static double kD = kBalancing.kD;
 
     // Shuffleboard
-    boolean debugMode = false;
+    boolean debugMode = false; // DO NOT ENABLE: currently causes errors; TODO: Fix debug mode
     private ShuffleboardTab sb_balancingTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
 
