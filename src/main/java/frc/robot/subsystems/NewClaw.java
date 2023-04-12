@@ -31,7 +31,7 @@ public class NewClaw extends PIDSubsystem {
 
     private GenericEntry tempEntry, dutyEncoderEntry, tofLeftAvgEntry, tofLeftRealEntry, tofRightAvgEntry, tofRightRealEntry;
 
-    private final boolean debug = true;
+    private final boolean debug = false;
 
     private final double[] lastToFValues = new double[5];
     private int indexCount;

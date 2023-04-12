@@ -80,10 +80,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   @Override
   public double getMeasurement() { // gets absolute position and returns the value 
-    double ecd_value = m_encoder.getAbsolutePosition();
-    if (debug){
+  
+    double ecd_value = m_encoder.getAbsolutePosition(); 
+    if (debug)
       rawPosition.setDouble(ecd_value);
-    }
 
      if (ecd_value < 0.4){  // used to fix encoder values, the greatest value before the values start again
       if (debug){
