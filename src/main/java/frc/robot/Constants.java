@@ -132,11 +132,13 @@ public final class Constants {
 
         public static final double openPosition                 = 0.77; // old 0.77
         public static final double armedOpenPosition            = 0.67; // old 0.77
+        public static final double armedDoublePosition          = 0.6;
         public static final double coneClosePosition            = 0.54;
         public static final double cubeClosePosition            = 0.585;
 
         public static final int coneDistanceThreshold           = 160; // old 160
-        public static final int cubeDistanceThreshold           = 60;
+        public static final int cubeDistanceThreshold           = 130;
+        public static final int doubleDistanceThreshold         = 220;
         
         public static final int stallTime                       = 40;
 
@@ -314,7 +316,7 @@ public final class Constants {
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
-            public final static double kConeAboveNew            = 0.64;  // 43.75 inches
+            public final static double kConeAboveNew            = 0.66;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
@@ -330,6 +332,7 @@ public final class Constants {
             public final static double kGroundPickupCube        = 1.19; // old 1.2 
             public final static double kGroundPickupCone        = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
+            public final static double kConeLow                 = 1.16;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate

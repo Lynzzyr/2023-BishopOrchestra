@@ -268,7 +268,11 @@ public class RobotContainer {
         // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
-                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                new ConditionalCommand(
+                    new ClawMovement(sys_claw, kClaw.armedOpenPosition),
+                    new ClawMovement(sys_claw, kClaw.armedDoublePosition),
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                )
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
@@ -276,7 +280,12 @@ public class RobotContainer {
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
                 )
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                .andThen(
+                    new ConditionalCommand(
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
                 .andThen(new WaitCommand(0.4))
                 .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
             )
@@ -361,6 +370,11 @@ public class RobotContainer {
         joystickSecondary.b()
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
+            );
+        
+        joystickSecondary.x()
+            .onTrue(
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
             );
 
         // Move arm and retract to mid cube position
