@@ -286,8 +286,9 @@ public class RobotContainer {
                         new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
-                .andThen(new WaitCommand(0.4))
-                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
+                    .andThen(new WaitCommand(0.4))
+                    .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
+                )
             )
             .onFalse(
                 new SequentialCommandGroup(
