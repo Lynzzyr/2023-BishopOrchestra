@@ -118,7 +118,7 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                       = 29;
+        public static final int clawCANID                       = 39;
 
         public static final int dutyCycleChannel                = 3;
 
@@ -347,7 +347,7 @@ public final class Constants {
         public static final double kCentemetreSafetyFactor      = 1.0;
 
         public static final class kDeviceID {
-            public static final int MOTOR_CAN_ID                = 24;
+            public static final int MOTOR_CAN_ID                = 38;
 
             public static final int MAX_LIMIT_SWITCH_ID         = 1;
             public static final int MIN_LIMIT_SWITCH_ID         = 2;
