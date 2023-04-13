@@ -33,7 +33,7 @@ public final class Constants {
 
     public static final class kCANBus {
         public static final String bus_rio                      = "rio";
-        public static final String bus_drive                    = "drive";
+        public static final String bus_drive                    = "rio";
     }
 
     public static final class kDrivetrain {
