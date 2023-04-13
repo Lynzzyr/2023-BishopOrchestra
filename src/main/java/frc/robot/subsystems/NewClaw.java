@@ -39,7 +39,7 @@ public class NewClaw extends PIDSubsystem {
   /** Creates a new NewClaw. */
   public NewClaw() {
     super(new PIDController(Constants.kClaw.kP, Constants.kClaw.kI, Constants.kClaw.kD));
-    clawMot = new WPI_TalonFX(kClaw.clawCANID, kCANBus.bus_rio);
+    clawMot = new WPI_TalonFX(kClaw.clawCANID);
     getController().setTolerance(0);
 
     configMot();
