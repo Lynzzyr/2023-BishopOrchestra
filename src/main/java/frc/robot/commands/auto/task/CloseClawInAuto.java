@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kCANdle.AnimationTypes;
-import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.Candle;
@@ -27,8 +26,7 @@ public class CloseClawInAuto extends SequentialCommandGroup {
                         AnimationTypes.Static,
                         kCANdle.kColors.cone[0],
                         kCANdle.kColors.cone[1],
-                        kCANdle.kColors.cone[2],
-                        LEDColorType.Cone
+                        kCANdle.kColors.cone[2]
                     )
                 ).alongWith(
                     new SequentialCommandGroup(

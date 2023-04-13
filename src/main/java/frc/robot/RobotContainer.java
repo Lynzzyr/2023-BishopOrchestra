@@ -5,17 +5,13 @@
 package frc.robot;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -166,6 +162,12 @@ public class RobotContainer {
 
         // Add auto routines to Shuffleboard
         sb_driveteam = Shuffleboard.getTab("Drive team");
+
+        //putting camera format on shuffleboard
+        sb_driveteam.addInteger("Camera FPS", () -> 10).withPosition(0, 2);
+        sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(1, 2);
+        sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(2, 2);
+
         addAutoRoutinesToShuffleboard();
 
         // Camera
@@ -414,8 +416,7 @@ public class RobotContainer {
                 )
             );             
 
-        // Set LED to cone (yellow)
-        joystickSecondary.leftStick()
+            joystickSecondary.leftStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
                     AnimationTypes.Static,
@@ -460,15 +461,7 @@ public class RobotContainer {
                     )
                 )
             );
-
-        // joystickSecondary.start()
-        //     .onTrue(
-        //         new RotateArmGroup(
-        //             sys_telescope, 
-        //             sys_armPIDSubsystem, 
-        //             kArmSubsystem.kSetpoints.kToLoadingRamp
-        //         )
-        //     );
+            
                    
     }
 

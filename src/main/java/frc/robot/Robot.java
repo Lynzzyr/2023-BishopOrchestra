@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   private int LEDState = 0;
 
   private Alliance currentAlliance; 
+  private boolean connected;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
     LEDState = 0;
 
     currentAlliance = DriverStation.getAlliance();
+    connected = false;
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
@@ -105,9 +107,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     if (LEDState == 1 || LEDState == 0) {
       Alliance alliance = DriverStation.getAlliance();
-      if (alliance != currentAlliance) {
+      if (alliance != currentAlliance || DriverStation.isDSAttached() != connected) {
         m_robotContainer.sys_candle.idleAnimation();
         currentAlliance = alliance;
+        connected = DriverStation.isDSAttached();
       }
     }
   }

@@ -33,7 +33,6 @@ public class Candle extends SubsystemBase {
 
     private LEDColorType currentColor;
 
-
     public Candle() {
         candle = new CANdle(kCANdle.kConfig.CANID);
 
@@ -87,7 +86,7 @@ public class Candle extends SubsystemBase {
      * @param type the cube or cone type
      */
 
-    public void setAnimation(AnimationTypes animationType, int r, int g, int b, LEDColorType type) {
+     public void setAnimation(AnimationTypes animationType, int r, int g, int b, LEDColorType type) {
       currentColor = type;
       setAnimation(animationType, r, g, b);
     }
@@ -360,6 +359,16 @@ public class Candle extends SubsystemBase {
       return currentAnimationSlot;
     }
 
+
+    public int[] getRGBColors() {
+      int[] rgb = {
+        lastLEDColors[9][0],
+        lastLEDColors[9][1],
+        lastLEDColors[9][2]
+      };
+      return rgb;
+    }
+
     public LEDColorType getLEDType() {
       return currentColor;
     }
@@ -384,12 +393,18 @@ public class Candle extends SubsystemBase {
      */
 
     public void idleAnimation() {
-      if (DriverStation.getAlliance() == Alliance.Red) {
-        setAnimation(AnimationTypes.SinWave, 150, 0, 0);
-      } else {
+      Alliance currentAlliance = DriverStation.getAlliance();
+      if (!DriverStation.isDSAttached()) {
+        setAnimation(AnimationTypes.SinWave, 0, 0, 0);
+      } else if (currentAlliance == Alliance.Red) {
+        setAnimation(AnimationTypes.SinWave, 200, 0, 0);
+      } else if (currentAlliance == Alliance.Blue) {
         setAnimation(AnimationTypes.SinWave, 0, 0, 255);
       }
-      // setAnimation(AnimationTypes.Static, 255, 155, 0);
+    }
+
+    public void FMSAnimation() {
+      setAnimation(AnimationTypes.Static, 0, 0, 0);
     }
 
     /**
