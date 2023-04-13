@@ -122,7 +122,8 @@ public final class Constants {
 
         public static final int dutyCycleChannel                = 3;
 
-        public static final int ToFCANID                        = 36;
+        public static final int LEFT_ToFCANID                   = 36;
+        public static final int RIGHT_ToFCANID                  = 37;
 
         public static final int currentLimit                    = 20;
 
