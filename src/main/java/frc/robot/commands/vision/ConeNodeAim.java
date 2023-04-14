@@ -88,7 +88,6 @@ public class ConeNodeAim extends CommandBase {
 
         if (kConeNodeAim.KdoTargetOffset){
             calculatedOutput = m_pidController.calculate((sys_limelight.getXOffset() + currentOffset));
-            System.out.println(sys_limelight.getXOffset() + currentOffset);
         } else {
             calculatedOutput =  m_pidController.calculate(sys_limelight.getXOffset());
         }
