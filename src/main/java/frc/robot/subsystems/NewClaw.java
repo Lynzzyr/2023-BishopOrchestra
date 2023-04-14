@@ -33,8 +33,10 @@ public class NewClaw extends PIDSubsystem {
 
     private final boolean debug = true;
 
-    private final double[] lastToFValues = new double[5];
-    private int indexCount;
+    private final double[] lastToFValuesL = new double[2];
+    private int indexCountL;
+    private final double[] lastToFValuesR = new double[2];
+    private int indexCountR;
   
   /** Creates a new NewClaw. */
   public NewClaw() {
@@ -147,43 +149,68 @@ public void setPID(double p, double i, double d) {
   public double rollingToFAvg(TimeOfFlight s_tof) {
     int currentDist = (int) s_tof.getRange();
 
-    if (indexCount > 1) {
-      indexCount = 0;
-    }
+    if (s_tof.equals(s_tofLeft)) {
+      if (indexCountL > 1) {
+        indexCountL = 0;
+      }
 
-    if (currentDist > 2) {
-      lastToFValues[indexCount] = currentDist;
-    }
-    
-    int sum = 0;
-    for (double value : lastToFValues) {
-      sum += value;
-    }
-    
-    int avg = sum/2;
+      if (currentDist > 2) {
+        lastToFValuesL[indexCountL] = currentDist;
+      }
+      
+      int sum = 0;
+      for (double value : lastToFValuesL) {
+        sum += value;
+      }
+      
+      int avg = sum/2;
 
-    if (avg > 300) {
-      avg = 300;
-    }
+      if (avg > 300) {
+        avg = 300;
+      }
 
-    indexCount++;
-    return avg;
+      indexCountL++;
+      return avg;
+    } else {
+      if (indexCountR > 1) {
+        indexCountR = 0;
+      }
+
+      if (currentDist > 2) {
+        lastToFValuesR[indexCountR] = currentDist;
+      }
+      
+      int sum = 0;
+      for (double value : lastToFValuesR) {
+        sum += value;
+      }
+      
+      int avg = sum/2;
+
+      if (avg > 300) {
+        avg = 300;
+      }
+
+      indexCountR++;
+      return avg;
+    }
   }
 
   @Override
   public void periodic() {
     super.periodic();
+    double avgDistL = rollingToFAvg(s_tofLeft);
+    double avgDistR = rollingToFAvg(s_tofRight);
+    double distL = getDistanceToFLeft();
+    double distR = getDistanceToFRight();
 
     if (debug) {
       tempEntry.setDouble(getMotorTempature());
       dutyEncoderEntry.setDouble(getMeasurement());
-      tofLeftAvgEntry.setDouble(rollingToFAvg(s_tofLeft));
-      tofLeftRealEntry.setDouble(getDistanceToFLeft());
-      tofRightAvgEntry.setDouble(rollingToFAvg(s_tofRight));
-      tofRightRealEntry.setDouble(getDistanceToFRight());
+      tofLeftAvgEntry.setDouble(avgDistL);
+      tofLeftRealEntry.setDouble(distL);
+      tofRightAvgEntry.setDouble(avgDistR);
+      tofRightRealEntry.setDouble(distR);
     }
-
-
-
   }
 }
