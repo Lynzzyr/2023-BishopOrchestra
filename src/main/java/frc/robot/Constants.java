@@ -454,10 +454,10 @@ public final class Constants {
 
         public static class kConeNodeAim {
             public static final double KretroTargetFF           = 0.265;
-            public static final double KretroTargetTolerance    = 0.015 ;
-            public static final double kP                       = 0.01; //.22
+            public static final double KretroTargetTolerance    = 0.3;
+            public static final double kP                       = 0.007; //.22
             public static final double kI                       = 0.0001;
-            public static final double kD                       = 0.0005;
+            public static final double kD                       = 0.0008;
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
         }
