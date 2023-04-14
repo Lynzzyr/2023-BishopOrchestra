@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -16,11 +17,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kGyro;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kMotor;
+import frc.robot.Constants.kGyro;
 
 public class Drivetrain extends SubsystemBase {
 

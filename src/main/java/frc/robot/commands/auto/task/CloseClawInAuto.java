@@ -1,16 +1,13 @@
 package frc.robot.commands.auto.task;
 
-import com.pathplanner.lib.PathPlanner;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kCANdle;
-import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kClaw;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.Candle;

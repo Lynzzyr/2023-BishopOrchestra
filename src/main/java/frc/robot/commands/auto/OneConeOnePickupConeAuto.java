@@ -8,14 +8,9 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArmSubsystem;
-import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
@@ -23,7 +18,6 @@ import frc.robot.commands.auto.task.AutoPathPlanning;
 import frc.robot.commands.auto.task.BalancingChargeStation;
 import frc.robot.commands.auto.task.CloseClawInAuto;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
-import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;

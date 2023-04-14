@@ -5,13 +5,15 @@
 package frc.robot;
 
 import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kCANdle;
@@ -36,10 +39,6 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
-import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
-import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
-import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
-import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.Drive.DefaultDrive;
 import frc.robot.commands.Drive.GearShift;
