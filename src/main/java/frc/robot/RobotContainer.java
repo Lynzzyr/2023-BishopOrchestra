@@ -40,12 +40,12 @@ import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
-import frc.robot.commands.Drive.DefaultDrive;
-import frc.robot.commands.Drive.GearShift;
-import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.Manual.PivotManualMove;
+import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.drive.GearShift;
+import frc.robot.commands.intake.IntakeHandoffSequence;
+import frc.robot.commands.intake.IntakePickupSequence;
+import frc.robot.commands.intake.PivotMove;
+import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
@@ -64,9 +64,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
-import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeRoller;
-import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.intake.IntakePivot;
+import frc.robot.subsystems.intake.IntakeRoller;
+import frc.robot.subsystems.intake.IntakeWrist;
 
 
 /**

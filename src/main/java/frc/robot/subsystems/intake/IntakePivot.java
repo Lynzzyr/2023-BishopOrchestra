@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.kIntake;
 
-public class IntakeWrist extends PIDSubsystem
+public class IntakePivot extends PIDSubsystem
 {
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
@@ -25,69 +25,55 @@ public class IntakeWrist extends PIDSubsystem
   private ShuffleboardTab tab_intake;
   private GenericEntry kP, kI, kD, encPos;
 
-  public IntakeWrist()
+  public IntakePivot()
   {
-    super(new PIDController(kIntake.kWristP, kIntake.kWristI, kIntake.kWristD));
+    super(new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD));
 
-    motor = new CANSparkMax(kIntake.id_motWrist, MotorType.kBrushless);
+    motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
     motor.setSmartCurrentLimit(kIntake.kIntakeCurrentLimit);
+    motor.setInverted(true);
     motor.burnFlash();
 
-    encoder = new DutyCycleEncoder(kIntake.port_encWrist);
-
-    getController().setTolerance(0.1);
+    encoder = new DutyCycleEncoder(kIntake.port_encPivot);
 
     if (debugMode) {
       tab_intake = Shuffleboard.getTab("Intake");
-      kP = tab_intake.add("kWristP", kIntake.kWristP).getEntry();
-      kI = tab_intake.add("kWristI", kIntake.kWristI).getEntry();
-      kD = tab_intake.add("kWristD", kIntake.kWristD).getEntry();
-      encPos = tab_intake.add("Wrist Abs Pos", getMeasurement()).getEntry();
+      kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
+      kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
+      kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
+      encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
     }
   }
 
   @Override
   public void useOutput(double output, double setpoint)
   {
-
-    if (output > kIntake.kVoltageLimits.kWristVoltageLimit)
+    
+    if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
     {
-      motor.setVoltage(kIntake.kVoltageLimits.kWristVoltageLimit);
+      motor.setVoltage(kIntake.kVoltageLimits.kPivotVoltageLimit);
     }
-    else if (output < -kIntake.kVoltageLimits.kWristVoltageLimit)
+    else if (output < -kIntake.kVoltageLimits.kPivotVoltageLimit)
     {
-      motor.setVoltage(-kIntake.kVoltageLimits.kWristVoltageLimit);
+      motor.setVoltage(-kIntake.kVoltageLimits.kPivotVoltageLimit);
     }
     else
     {
       motor.setVoltage(output);
     }
   }
+
   @Override
   public double getMeasurement()
   {
-    return getWristPos();
+    return encoder.getAbsolutePosition();
   }
 
-  public double getWristPos()
+  public void pivotControl(double voltage)
   {
-    double currPos = encoder.getAbsolutePosition();
-
-    if (currPos < 0.25)
-    {
-      return currPos + 1;
-    }
-    else
-    {
-      return currPos;
-    }
-  }
-
-  public void wristControl(double speed)
-  {
-    motor.setVoltage(12 * speed);
+    motor.setVoltage(voltage);
   }
 
   @Override
@@ -95,7 +81,7 @@ public class IntakeWrist extends PIDSubsystem
   {
     super.periodic();
     if (debugMode) {
-      encPos.setDouble(getWristPos());
+      encPos.setDouble(encoder.getAbsolutePosition());
     }
   }
 }

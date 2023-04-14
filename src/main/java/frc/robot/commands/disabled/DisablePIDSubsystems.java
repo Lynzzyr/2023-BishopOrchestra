@@ -3,8 +3,8 @@ package frc.robot.commands.disabled;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.NewClaw;
-import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.intake.IntakePivot;
+import frc.robot.subsystems.intake.IntakeWrist;
 
 public class DisablePIDSubsystems extends InstantCommand {
 
