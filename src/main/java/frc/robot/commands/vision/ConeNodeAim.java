@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
+import frc.robot.Constants.kLimelight.kConeNodeAim;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Telescope;
@@ -30,6 +31,7 @@ public class ConeNodeAim extends CommandBase {
 
     double dirInRad, turning;
     double[] lowNodeCrop, highNodeCrop;
+    double currentOffset;
 
     /** Creates a new ConeNodeAim. */
     public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain) {
@@ -57,10 +59,10 @@ public class ConeNodeAim extends CommandBase {
         highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
         if (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended) {
             sys_limelight.setCropSize(highNodeCrop);
-            //add target mode
+            currentOffset = kConeNodeAim.KhighNodeOffset;
         } else {
             sys_limelight.setCropSize(lowNodeCrop);
-            //add targetMode
+            currentOffset = kConeNodeAim.KlowNodeOffset;
         }
     }
 
@@ -82,7 +84,14 @@ public class ConeNodeAim extends CommandBase {
     }
 
     public double getTargetSpeed(){
-        double calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
+        double calculatedOutput;
+
+        if (kConeNodeAim.KdoTargetOffset){
+            calculatedOutput = m_pidController.calculate((sys_limelight.getXOffset() + currentOffset));
+            System.out.println(sys_limelight.getXOffset() + currentOffset);
+        } else {
+            calculatedOutput =  m_pidController.calculate(sys_limelight.getXOffset());
+        }
 
         if (calculatedOutput >= 0){
             calculatedOutput += Constants.kLimelight.kConeNodeAim.KretroTargetFF;
