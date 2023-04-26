@@ -330,8 +330,8 @@ public class RobotContainer {
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
 
+        // Limelight: cone node aim
         joystickMain.leftBumper()
-
             .whileTrue(cmd_coneNodeAim);
 
         // Gear shifting (high-mid)
@@ -339,12 +339,13 @@ public class RobotContainer {
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
+        // Manual claw movement, open
         joystickMain.povUp()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.15)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(kClaw.manualMovementSpeed)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
-
+        // Manual claw movement, close
         joystickMain.povDown()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-kClaw.manualMovementSpeed)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
         // Stall motors on charge station
@@ -361,7 +362,7 @@ public class RobotContainer {
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
-        // Move arm and extend to place top cube position
+        // Move arm and extend to top cube position
         joystickSecondary.y()
             .onTrue(
                 new MoveThenExtend(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop, 
@@ -374,6 +375,7 @@ public class RobotContainer {
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
             );
         
+        // Move arm and retract to cone low position
         joystickSecondary.x()
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
@@ -415,7 +417,8 @@ public class RobotContainer {
                 )
             );             
 
-            joystickSecondary.leftStick()
+        // Set LED to cone (yellow)
+        joystickSecondary.leftStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
                     AnimationTypes.Static,
@@ -450,6 +453,7 @@ public class RobotContainer {
                 )
             );
 
+            // Set LED to red
             joystickSecondary.start()
                 .onTrue(Commands.runOnce(
                     () -> sys_candle.setAnimation(
