@@ -26,6 +26,7 @@ public final class Constants {
                                                           
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
+        public static final int port_joystickTesting            = 2;
 
         public static final double timerRumbleIntensity         = 0.5;
         public static final double clawRumbleIntensity          = 1;
@@ -449,7 +450,6 @@ public final class Constants {
 
         public static final class KretroTarget {
             public static final boolean retroDistanceDebug      = false; 
-            public static final double lowNodeHeight            = 60.14; //cm
             public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22}; // x, x, y, y
             public static final double[] highNodeCrop           = {-1, 1, 0.25, 1}; // x, x, y, y
         }
@@ -465,6 +465,19 @@ public final class Constants {
             public static final double kD                       = 0.0008;
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
+        }
+
+        public static class KAutoDriveAlign {
+            public static final double lowNodeHeight            = 60.14; //cm
+            public static final double kP                       = 0.01;
+            public static final double kI                       = 0.0001;
+            public static final double kD                       = 0.0005;
+            public static final double driveFF                  = 0.265;    //TO BE TUNED
+            public static final double driveTolerance           = 2;        //cm
+            public static final double alignedTimeout           = 250;      //ms
+            public static final double desiredTargetDistance    = 10;       //cm
+            public static final boolean debugMode               = false; 
+            public static final boolean applySecondaryTolerance = false;    //TO be removed. for testing.
         }
     }
 
