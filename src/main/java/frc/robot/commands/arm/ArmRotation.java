@@ -11,7 +11,6 @@ public class ArmRotation extends CommandBase {
   private final Arm sys_arm;
   private double setpoint;
 
-
   /** Creates a new ArmRotation2. */
   public ArmRotation(Arm arm, double setpoint) {
     sys_arm = arm;
@@ -25,8 +24,8 @@ public class ArmRotation extends CommandBase {
   public void initialize() {
     sys_arm.setSetpoint(setpoint);
     sys_arm.enable();
-  
   }
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
@@ -34,7 +33,6 @@ public class ArmRotation extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-//    sys_arm.disable();
     sys_arm.setPrevPos(setpoint);
   }
 

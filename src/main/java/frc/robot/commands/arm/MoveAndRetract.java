@@ -13,6 +13,7 @@ public class MoveAndRetract extends CommandBase {
   private final Arm sys_arm;
   private double armSetpoint;
   private final Telescope sys_telescope;
+
   /** Creates a new MoveAndRetract. */
   public MoveAndRetract(Arm arm, double armSetpoint,Telescope telescope) {
     sys_arm = arm;
@@ -20,8 +21,6 @@ public class MoveAndRetract extends CommandBase {
     this.armSetpoint = armSetpoint;
 
     addRequirements(sys_arm, sys_telescope);
-
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -31,16 +30,12 @@ public class MoveAndRetract extends CommandBase {
     sys_telescope.setPrevPos(Constants.kTelescope.kDestinations.kRetracted);
     sys_arm.setSetpoint(armSetpoint);
     sys_arm.enable();
-  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() {}
   
-    }
-  
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -52,4 +47,3 @@ public class MoveAndRetract extends CommandBase {
     return true;
   }
 }
-
