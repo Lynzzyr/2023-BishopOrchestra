@@ -1,18 +1,18 @@
 package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 
 public class AutoCloseClaw extends CommandBase {
 
-    private final NewClaw m_claw;
+    private final Claw m_claw;
 
     private final double setpoint;
 
     private boolean finished = false;
     private int closeDistance;
 
-    public AutoCloseClaw(NewClaw claw, double setpoint, int closeDistance) {
+    public AutoCloseClaw(Claw claw, double setpoint, int closeDistance) {
         m_claw = claw;
         this.setpoint = setpoint;
         this.closeDistance = closeDistance;

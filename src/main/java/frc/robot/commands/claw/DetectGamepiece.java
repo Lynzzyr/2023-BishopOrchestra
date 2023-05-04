@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kClaw;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 
 public class DetectGamepiece extends CommandBase {
 
-    private final NewClaw sys_claw;
+    private final Claw sys_claw;
     private int rumbleTime = -1;
     private boolean rumblingDone;
     private CommandXboxController joystickMain;
     private CommandXboxController joystickSecondary;
     private boolean cube;
 
-    public DetectGamepiece(NewClaw subsystem, CommandXboxController joystickMain, CommandXboxController joystickSecondary, boolean cube) {
+    public DetectGamepiece(Claw subsystem, CommandXboxController joystickMain, CommandXboxController joystickSecondary, boolean cube) {
         sys_claw = subsystem;
         this.cube = cube;
         this.joystickMain = joystickMain;

@@ -11,11 +11,11 @@ import frc.robot.Constants.kClaw;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.Candle;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 
 public class CloseClawInAuto extends SequentialCommandGroup {
 
-    public CloseClawInAuto(NewClaw sys_claw, Candle sys_LEDs) {
+    public CloseClawInAuto(Claw sys_claw, Candle sys_LEDs) {
 
         Command cmdLED = //blinks the LEDs
                 Commands.runOnce(

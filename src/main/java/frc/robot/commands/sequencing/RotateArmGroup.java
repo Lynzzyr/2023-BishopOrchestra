@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Telescope;
 
 public class RotateArmGroup extends ParallelCommandGroup{
@@ -12,7 +12,7 @@ public class RotateArmGroup extends ParallelCommandGroup{
 
     public RotateArmGroup(
         Telescope sys_telescope, 
-        ArmPIDSubsystem sys_arm,  
+        Arm sys_arm,  
         double armDirection
     ) {
 

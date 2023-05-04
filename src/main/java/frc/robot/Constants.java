@@ -482,7 +482,7 @@ public final class Constants {
     }
 
     public static final class kStallDriveOnChargeStation {
-        public static final double kForwardSpeed = 0.345;
-        public static final double kBackwardSpeed = -0.34;
+        public static final double kForwardSpeed                = 0.345;
+        public static final double kBackwardSpeed               = -0.34;
     }
 }

@@ -5,16 +5,16 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 
 public class MoveArmManual extends CommandBase {
-  private final ArmPIDSubsystem sys_arm;
+  private final Arm sys_arm;
   private double m_voltage;
 
   /** Creates a new MoveArmManual. */
   
-  public MoveArmManual(ArmPIDSubsystem armPIDSubsystem, double voltage) {
-    sys_arm = armPIDSubsystem;
+  public MoveArmManual(Arm arm, double voltage) {
+    sys_arm = arm;
     this.m_voltage = voltage;
 
     addRequirements(sys_arm);

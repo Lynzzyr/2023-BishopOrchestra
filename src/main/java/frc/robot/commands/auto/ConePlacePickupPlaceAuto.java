@@ -19,20 +19,20 @@ import frc.robot.commands.auto.task.AutoPathPlanning;
 import frc.robot.commands.auto.task.CloseClawInAuto;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
 import frc.robot.commands.vision.ConeNodeAim;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
 public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
 
     public ConePlacePickupPlaceAuto(
             Drivetrain sys_drivetrain,
-            ArmPIDSubsystem sys_armPIDSubsystem,
+            Arm sys_arm,
             Telescope sys_telescope,
-            NewClaw sys_claw,
+            Claw sys_claw,
             Candle sys_LEDs,
             Limelight sys_limelight,
             List<PathPlannerTrajectory> pathGroup) {
@@ -40,7 +40,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
-                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
+                new PlaceConeOnMidAtStart(sys_arm, sys_telescope, sys_claw),
                 Commands.waitSeconds(0.5),
                 
 
@@ -57,11 +57,11 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                     .alongWith(
                         // Cone grabbed
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted).withTimeout(0.5),
-                        new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
+                        new ArmRotation(sys_arm, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
 
                 // Place cone
-                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                new PlaceConeOnMidAtStart(sys_arm, sys_telescope, sys_claw)
                 .alongWith(
                     // Lineup using Limelight
                     new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75)

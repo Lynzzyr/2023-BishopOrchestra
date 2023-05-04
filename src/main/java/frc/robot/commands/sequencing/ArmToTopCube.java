@@ -3,17 +3,17 @@ package frc.robot.commands.sequencing;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kTelescope;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Telescope;
 
 public class ArmToTopCube extends CommandBase {
 
-    private final ArmPIDSubsystem sys_arm;;
+    private final Arm sys_arm;;
     private final Telescope sys_telescope;
 
     private boolean extended = false;
 
-    public ArmToTopCube(ArmPIDSubsystem sys_arm, Telescope sys_telescope) {
+    public ArmToTopCube(Arm sys_arm, Telescope sys_telescope) {
         this.sys_arm = sys_arm;
         this.sys_telescope = sys_telescope;
 

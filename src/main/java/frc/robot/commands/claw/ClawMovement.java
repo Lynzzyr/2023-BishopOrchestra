@@ -2,14 +2,14 @@ package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 
 public class ClawMovement extends CommandBase {
 
-    private final NewClaw m_claw;
+    private final Claw m_claw;
     private double m_setPoint; // private final
 
-    public ClawMovement(NewClaw claw, double setPoint) {
+    public ClawMovement(Claw claw, double setPoint) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
         this.m_setPoint = setPoint;

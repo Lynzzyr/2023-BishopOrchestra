@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 
-public class ArmPIDSubsystem extends PIDSubsystem {
+public class Arm extends PIDSubsystem {
   private final CANSparkMax m_motor1;
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
@@ -27,8 +27,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   private final boolean debug = false;
 
-  /** Creates a new ArmPIDSubsystem. */
-  public ArmPIDSubsystem() {
+  /** Creates a new Arm. */
+  public Arm() {
     super(new PIDController(Constants.kArmSubsystem.kPID.kP,Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD));
 
     m_motor1 = new CANSparkMax(Constants.kArmSubsystem.kMotor1ID, MotorType.kBrushless);

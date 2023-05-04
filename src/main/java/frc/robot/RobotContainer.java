@@ -39,13 +39,8 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
+import frc.robot.commands.AutoDriveAlign;
 import frc.robot.commands.StallDriveOnChargeStation;
-import frc.robot.commands.drive.DefaultDrive;
-import frc.robot.commands.drive.GearShift;
-import frc.robot.commands.intake.IntakeHandoffSequence;
-import frc.robot.commands.intake.IntakePickupSequence;
-import frc.robot.commands.intake.PivotMove;
-import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
@@ -57,13 +52,18 @@ import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.claw.DetectGamepiece;
+import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.drive.GearShift;
+import frc.robot.commands.intake.IntakeHandoffSequence;
+import frc.robot.commands.intake.IntakePickupSequence;
+import frc.robot.commands.intake.PivotMove;
+import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.vision.ConeNodeAim;
-import frc.robot.commands.AutoDriveAlign;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.intake.IntakePivot;
 import frc.robot.subsystems.intake.IntakeRoller;
@@ -90,9 +90,9 @@ public class RobotContainer {
     public final Drivetrain sys_drivetrain;
     private final Limelight sys_limelight;
     // public final Claw sys_claw;
-    public final NewClaw sys_claw;
+    public final Claw sys_claw;
     public final Candle sys_candle;
-    public final ArmPIDSubsystem sys_armPIDSubsystem;
+    public final Arm sys_arm;
     public final Telescope sys_telescope;
     public final IntakePivot sys_intakePivot;
     public final IntakeWrist sys_intakeWrist;
@@ -138,9 +138,9 @@ public class RobotContainer {
         sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
-        sys_claw = new NewClaw();
+        sys_claw = new Claw();
         sys_candle = new Candle();
-        sys_armPIDSubsystem = new ArmPIDSubsystem();
+        sys_arm = new Arm();
         sys_telescope = new Telescope();
         // sys_limelight = new Limelight(joystickMain);
 
@@ -230,17 +230,17 @@ public class RobotContainer {
 
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, trajectory);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, trajectory);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kConePlacePickupPlaceAuto.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed+1, kAuto.kMaxAcceleration, true);
-            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
@@ -277,20 +277,20 @@ public class RobotContainer {
                 new ConditionalCommand(
                     new ClawMovement(sys_claw, kClaw.armedOpenPosition),
                     new ClawMovement(sys_claw, kClaw.armedDoublePosition),
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                 )
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                         new WaitCommand(0), 
-                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
                 )
                 .andThen(
                     new ConditionalCommand(
                         new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
                         new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
-                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
                     .andThen(new WaitCommand(0.4))
                     .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
@@ -312,7 +312,7 @@ public class RobotContainer {
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
                         .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
                         new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                         )
                     )
                 .andThen(new WaitCommand(0.5))
@@ -370,54 +370,54 @@ public class RobotContainer {
         // Move arm and extend to top cube position
         joystickSecondary.y()
             .onTrue(
-                new MoveThenExtend(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop, 
+                new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
                 sys_telescope, Constants.kTelescope.kDestinations.kExtended)
             );
 
         // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
             );
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
             );
 
         // Move arm and retract to mid cube position
         joystickSecondary.a()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
             );
 
         // Move arm and retract to double substation
         joystickSecondary.rightBumper()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
             ); // pickup from loading station
             
         // Move arm and retract to idling position
         joystickSecondary.leftBumper()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
             );
                     
         // Move arm and retract to ground pickup (resting on intake) position
         joystickSecondary.back()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(
+            .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
                 new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
                 )
             );
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(
+            .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
                 new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
                 )
             );             
@@ -488,7 +488,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
-        sys_armPIDSubsystem.disable();
+        sys_arm.disable();
 
         Command chosenAutoRoutine = sc_chooseAutoRoutine.getSelected();
 

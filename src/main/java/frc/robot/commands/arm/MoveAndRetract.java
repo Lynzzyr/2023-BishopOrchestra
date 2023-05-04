@@ -6,16 +6,16 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Telescope;
 
 public class MoveAndRetract extends CommandBase {
-  private final ArmPIDSubsystem sys_arm;
+  private final Arm sys_arm;
   private double armSetpoint;
   private final Telescope sys_telescope;
   /** Creates a new MoveAndRetract. */
-  public MoveAndRetract(ArmPIDSubsystem armPIDSubsystem, double armSetpoint,Telescope telescope) {
-    sys_arm = armPIDSubsystem;
+  public MoveAndRetract(Arm arm, double armSetpoint,Telescope telescope) {
+    sys_arm = arm;
     sys_telescope = telescope;
     this.armSetpoint = armSetpoint;
 

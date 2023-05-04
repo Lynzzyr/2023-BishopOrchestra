@@ -6,18 +6,18 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Telescope;
 
 public class MoveThenExtend extends CommandBase {
-  private final ArmPIDSubsystem sys_arm;
+  private final Arm sys_arm;
   private double armSetpoint;
   private final double telescopeSetpoint;
   private final Telescope sys_telescope;
   private boolean extended = false;
   /** Creates a new ArmToTop. */
-  public MoveThenExtend(ArmPIDSubsystem armPIDSubsystem, double armSetpoint,Telescope telescope, double telescopeSetpoint){
-    sys_arm = armPIDSubsystem;
+  public MoveThenExtend(Arm arm, double armSetpoint,Telescope telescope, double telescopeSetpoint){
+    sys_arm = arm;
     sys_telescope = telescope;
     this.armSetpoint = armSetpoint;
     this.telescopeSetpoint = telescopeSetpoint;

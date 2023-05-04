@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.kClaw;
 
-public class NewClaw extends PIDSubsystem {
+public class Claw extends PIDSubsystem {
   private final WPI_TalonFX clawMot;
 
     private final DutyCycleEncoder clawDutyEncoder;
@@ -38,8 +38,8 @@ public class NewClaw extends PIDSubsystem {
     private final double[] lastToFValuesR = new double[2];
     private int indexCountR;
   
-  /** Creates a new NewClaw. */
-  public NewClaw() {
+  /** Creates a new Claw. */
+  public Claw() {
     super(new PIDController(Constants.kClaw.kP, Constants.kClaw.kI, Constants.kClaw.kD));
     clawMot = new WPI_TalonFX(kClaw.clawCANID);
     getController().setTolerance(0);

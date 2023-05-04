@@ -1,29 +1,37 @@
-![Bishop](./doc/bishopLogo.png)
+# 2023-Bishop
 
-## Useful Documentation
-[CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit?usp=sharing)
+![5409](./img/garthwebbrobotics_small.jpg)
+![Bishop](./img/bishop_logo.png)
 
-[Motors and Gearing Ratios - Bishop](https://docs.google.com/spreadsheets/d/1mly-FWH9S1RMrAUBcaXnyuavnCqU-cXk0Q0pLDEhZ-Y/edit?usp=sharing)
+## Garth Webb Chargers - 5409
 
-[Motors and Gearing Ratios - Windsor](https://docs.google.com/spreadsheets/d/1FxBIIsZFDOvoKsso25b7TmFgGUk4gB1KhH03Lld9y3U/edit?usp=sharing)
+[The Blue Alliance](https://www.thebluealliance.com/team/5409)
 
-[Driveteam button mapping](https://docs.google.com/spreadsheets/d/1Z_SK2qxh_o4-e56WKn4cpELmqUnG5LR1-ANQ0Ndb_h8/edit?usp=sharing)
+[Website](https://sites.google.com/hdsb.ca/garthwebrobotics/home)
+
+[GitHub](https://github.com/FRC5409)
+
+[YouTube](https://www.youtube.com/@gwssrobotics5409)
+
+[Twitter](https://twitter.com/gwssrobotics)
+
+
+## Documentaton
+
+[Button Bindings](#button-bindings)
+
+[CAN IDs](#can-ids)
 
 [Auto routines diagram](./doc/Auto%20Routines%20Diagram.pdf)
 
-## Libraries 
-[LimelightHelpers](https://github.com/LimelightVision/limelightlib-wpijava)
-
-[Pheonix](https://store.ctr-electronics.com/software/)
-
-[Rev](https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information)
-
 ## Button Bindings
+
+[Spreadsheet](https://docs.google.com/spreadsheets/d/1Z_SK2qxh_o4-e56WKn4cpELmqUnG5LR1-ANQ0Ndb_h8/edit?usp=sharing)
 
 | Button      | Controller | Function                                           | Subsystem(s)          | Action |
 | :---------: | :--------: | :------------------------------------------------- | :-------------------- | :----: |
-| RT          | Primary    | Accelerate                                         | Drivetrain            | Hold   |
 | LT          | Primary    | Decelerate/reverse                                 | Drivetrain            | Hold   |
+| RT          | Primary    | Accelerate                                         | Drivetrain            | Hold   |
 | LB          | Primary    | Cone node aim                                      | Limelight, Drivetrain | Hold   |
 | RB          | Primary    | Gear shifting (mid-high)                           | Drivetrain            | Hold   |
 | LS-X        | Primary    | Rotation                                           | Drivetrain            | Hold   |
@@ -42,8 +50,8 @@
 | D-PAD RIGHT | Primary    |                                                    |                       |        |
 | START       | Primary    | Stall on charge station                            | Drivetrain            | Hold   |
 | BACK        | Primary    |                                                    |                       |        |
-| RT          | Secondary  | Manual arm up                                      | Arm, CANdle           | Hold   |
 | LT          | Secondary  | Manual arm down                                    | Arm, CANdle           | Hold   |
+| RT          | Secondary  | Manual arm up                                      | Arm, CANdle           | Hold   |
 | LB          | Secondary  | Move arm and retract to idling position            | Arm, Telescope        | Press  |
 | RB          | Secondary  | Move arm and retract to double substation          | Arm, Telescope        | Press  |
 | LS-X        | Secondary  |                                                    |                       |        |
@@ -56,8 +64,8 @@
 | Y           | Secondary  | Move arm and extend to top cube position           | Arm, Telescope        | Press  |
 | A           | Secondary  | Move arm and retract to mid cube position          | Arm, Telescope        | Press  |
 | B           | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope        | Press  |
-| D-PAD UP    | Secondary  | Manual telescope extend                            | Drivetrain            | Press  |
-| D-PAD DOWN  | Secondary  | Manual telescope retract                           | Drivetrain            | Press  |
+| D-PAD UP    | Secondary  | Manual telescope extend                            | Telescope             | Press  |
+| D-PAD DOWN  | Secondary  | Manual telescope retract                           | Telescope             | Press  |
 | D-PAD LEFT  | Secondary  |                                                    |                       |        |
 | D-PAD RIGHT | Secondary  |                                                    |                       |        |
 | START       | Secondary  | Set LED to red                                     | CANdle                | Press  |
@@ -67,8 +75,8 @@
 
 | Key         | Value              |
 | :---------: | :----------------: |
-| RT          | Right trigger      |
 | LT          | Left trigger       |
+| RT          | Right trigger      |
 | LB          | Left bumper        |
 | RB          | Right bumper       |
 | LS-X        | Left stick x-axis  |
@@ -92,6 +100,8 @@
 
 ## CAN IDs
 
+[Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit?usp=sharing)
+
 | Part                      | ID  | CAN Bus         |
 | :------------------------ | :-: | :-------------: |
 | PDH                       | 1   | rio             |
@@ -105,12 +115,12 @@
 | Falcon Right 3            | 25  | rio             |
 | CANCoder (Left)           | 29  | rio             |
 | CANCoder (Right)          | 30  | rio             |
-| Elevator SparkMax         | 38  | rio             |
-| Falcon Claw               | 39  | rio             |
+| Shoulder SparkMax 2       | 32  | rio             |
+| Shoulder SparkMax 1       | 33  | rio             |
+| Left Claw ToF             | 36  | rio             |
+| Right Claw ToF            | 37  | rio             |
+| Telescope SparkMax        | 38  | rio             |
+| Claw Falcon               | 39  | rio             |
 | Intake Roller Falcon      | 28  | rio             |
-| Left ToF Claw             | 36  | rio             |
-| Right ToF Claw            | 37  | rio             |
 | Intake Wrist SparkMax     | 34  | rio             |
 | Intake Pivot SparkMax     | 35  | rio             |
-| Shoulder spark max        | 33  | rio             |
-| Shoulder spark max        | 32  | rio             |
