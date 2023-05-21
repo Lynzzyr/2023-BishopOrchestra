@@ -64,6 +64,9 @@ public class Robot extends TimedRobot {
         )
         .onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
 
+    // Set music for orchestra; music files located in src/main/deploy/orchestra
+    m_robotContainer.sys_drivetrain.setTrack("orchestra/o-canada.chrp");
+    
   }
 
   /**

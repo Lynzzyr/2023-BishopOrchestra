@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -37,6 +41,9 @@ public class Drivetrain extends SubsystemBase {
     private NeutralMode m_neutralMode;
 
     private final DifferentialDrive m_diffDrive;
+
+    private final ArrayList<TalonFX> m_instruments;
+    private final Orchestra m_orchestra;
 
     private final WPI_CANCoder enc_leftDrive;
     private final WPI_CANCoder enc_rightDrive;
@@ -86,6 +93,14 @@ public class Drivetrain extends SubsystemBase {
         configMotors();
 
         m_diffDrive = new DifferentialDrive(mot_leftFrontDrive, mot_rightFrontDrive);
+
+        m_instruments = new ArrayList<TalonFX>();
+        m_instruments.add(mot_leftFrontDrive);
+        m_instruments.add(mot_leftCentreDrive);
+        m_instruments.add(mot_leftRearDrive);
+        m_instruments.add(mot_rightCentreDrive);
+
+        m_orchestra = new Orchestra(m_instruments);
 
         // Instantiate CANCoders
         enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder);
@@ -397,7 +412,47 @@ public class Drivetrain extends SubsystemBase {
         this.turningSpeed = turningSpeed;
     }
 
-    // ----------
+    // Orchestra ----------
+
+    public void setTrack(String filePath) {
+
+        m_orchestra.loadMusic(filePath);
+
+    }
+
+    /**
+     * Toggles music to play or pause.
+     */
+    public void toggleMusic() {
+
+        if (isPlayingMusic()) {
+
+            m_orchestra.pause();
+
+        } else {
+
+            m_orchestra.play();
+
+        }
+
+    }
+
+    /**
+     * Stops the music file that is loaded.
+     * This resets the current position in the track to the start.
+     */
+
+    public void stopAndRewindMusic() {
+
+        m_orchestra.stop();
+
+    }
+
+    public boolean isPlayingMusic() {
+
+        return m_orchestra.isPlaying();
+
+    }
 
     @Override
     public void periodic() {

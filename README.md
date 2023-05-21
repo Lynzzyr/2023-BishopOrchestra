@@ -3,6 +3,8 @@
 ![5409](./img/garthwebbrobotics_small.jpg)
 ![Bishop](./img/bishop_logo.png)
 
+# ***Fork which includes orchestra within drivetrain***
+
 ## Garth Webb Chargers - 5409
 
 [The Blue Alliance](https://www.thebluealliance.com/team/5409)
@@ -66,8 +68,8 @@
 | B           | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope        | Press  |
 | D-PAD UP    | Secondary  | Manual telescope extend                            | Telescope             | Press  |
 | D-PAD DOWN  | Secondary  | Manual telescope retract                           | Telescope             | Press  |
-| D-PAD LEFT  | Secondary  |                                                    |                       |        |
-| D-PAD RIGHT | Secondary  |                                                    |                       |        |
+| D-PAD LEFT  | Secondary  | Toggle play/pause orchestra music                  | Drivetrain            | Press  |
+| D-PAD RIGHT | Secondary  | Stop and rewind orchestra music                    | Drivetrain            | Press  |
 | START       | Secondary  | Set LED to red                                     | CANdle                | Press  |
 | BACK        | Secondary  | Move arm and retract to resting on intake position | Arm, Telescope        | Press  |
 

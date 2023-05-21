@@ -362,6 +362,13 @@ public class RobotContainer {
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
+        // Orchestra controls
+        joystickSecondary.povLeft()
+            .onTrue(Commands.runOnce(() -> sys_drivetrain.toggleMusic(), sys_drivetrain));
+
+        joystickSecondary.povRight()
+            .onTrue(Commands.runOnce(() -> sys_drivetrain.stopAndRewindMusic(), sys_drivetrain));
+        
         // Move arm and extend to top cube position
         joystickSecondary.y()
             .onTrue(
