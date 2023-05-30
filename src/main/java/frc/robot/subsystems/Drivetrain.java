@@ -126,17 +126,17 @@ public class Drivetrain extends SubsystemBase {
         // Shuffleboard
         if (debugMode) {
             sb_drivetrainTab = Shuffleboard.getTab("Drivetrain");
-            nt_leftVelocity = sb_drivetrainTab.add("Left velocity", getLeftVelocity()).getEntry();
-            nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
-            nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
-            nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
-            nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
-            nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
-            nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
-            nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
-            nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
-            nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
-            nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
+            sb_drivetrainTab.addNumber("Left velocity", this::getLeftVelocity);
+            sb_drivetrainTab.addNumber("Right velocity", this::getRightVelocity);
+            sb_drivetrainTab.addNumber("Left distance", this::getLeftDistance);
+            sb_drivetrainTab.addNumber("Right distance", this::getRightDistance);
+            sb_drivetrainTab.addNumber("Left temperature", this::getAverageLeftMotorTemperature);
+            sb_drivetrainTab.addNumber("Right temperature", this::getAverageRightMotorTemperature);
+            sb_drivetrainTab.addNumber("Gyro yaw", this::getYaw);
+            sb_drivetrainTab.addNumber("Gyro pitch", this::getPitch);
+            sb_drivetrainTab.addNumber("Gyro roll", this::getRoll);
+            sb_drivetrainTab.addNumber("X Pose meters", m_odometry.getPoseMeters()::getX);
+            sb_drivetrainTab.addNumber("Y Pose meters", m_odometry.getPoseMeters()::getY);
         }
     }
 
@@ -458,21 +458,6 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update odometry
         m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
-
-        // Push data to Shuffleboard
-        if (debugMode) {
-            nt_leftVelocity.setDouble(getLeftVelocity());
-            nt_rightVelocity.setDouble(getRightVelocity());
-            nt_leftDistance.setDouble(getLeftDistance());
-            nt_rightDistance.setDouble(getRightDistance());
-            nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
-            nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
-            nt_gyroYaw.setDouble(getYaw());
-            nt_gyroPitch.setDouble(getPitch());
-            nt_gyroRoll.setDouble(getRoll());
-            nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
-            nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
-        }
         
     }
 

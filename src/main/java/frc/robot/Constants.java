@@ -305,7 +305,6 @@ public final class Constants {
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.001;
         public final static double kg                           = 0.4;
-        public final static double knintydegreepos              = 0; // old setpoint = -0.042
 
         public static class kPID {
             public static final double kP                       = 50;
@@ -314,26 +313,17 @@ public final class Constants {
         }
     
         public static class kSetpoints {
-            public final static double kRestingOnIntake         = 0;
 
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
             public final static double kConeAboveNew            = 0.66;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
- 
-            public final static double kToGroundFront           = 0.0; //placeholder
-            public final static double kToGroundBack            = 0.0; //placeholder
-            
-            public final static double kToLoadingRamp           = 0; //placeholder
-            public final static double kToLoadingIntake         = 0;
 
             public final static double kToLoadingshoulder       = 0.672; // 38.5 inches
-            public final static double kToHandoff               = 0.0; //placeholder
-
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kGroundPickupCube        = 1.19; // old 1.2 
-            public final static double kGroundPickupCone        = 1.21; // old 1.2 
+            public final static double kGroundPickupCube        = 1.19; 
+            public final static double kGroundPickupCone        = 1.21; 
             public final static double kAutoDrivingWithCone     = 1.15;
             public final static double kConeLow                 = 1.16;
 

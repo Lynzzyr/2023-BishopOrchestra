@@ -257,13 +257,7 @@ public class RobotContainer {
      * PS4} controllers or
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
-     * 
-     * y-intake pivot ascend
-     * a-intake pivot descend
-     * x-intake roller roll backwards
-     * b-intake roller roll forwards
-      * starting with - 20% of 12 = 2.4
-      */
+     */
     private void configureBindings() {
 
         // Auto-close claw for cone
